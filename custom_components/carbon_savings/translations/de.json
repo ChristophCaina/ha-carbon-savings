@@ -1,0 +1,209 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Carbon Savings",
+        "description": "Globale Faktoren für alle Quellen. Der Sensor für die Netz-CO2-Intensität (z. B. Electricity Maps) ist optional; der Ersatzwert wird verwendet, wenn er fehlt oder nicht verfügbar ist.",
+        "data": {
+          "grid_intensity_sensor": "Sensor CO2-Intensität Stromnetz",
+          "grid_fallback": "Ersatzwert CO2-Intensität",
+          "tree_factor": "CO2 pro Baum"
+        },
+        "data_description": {
+          "grid_intensity_sensor": "Sensor in gCO2eq/kWh, z. B. aus der Electricity-Maps-Integration.",
+          "grid_fallback": "Wird verwendet, wenn kein Sensor gesetzt oder er nicht verfügbar ist.",
+          "tree_factor": "kg CO2, die einem gepflanzten Baum entsprechen. Kalibrierung über das SolarEdge-Portal: eingespartes CO2 ÷ Bäume."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Carbon Savings ist bereits eingerichtet. Quellen (PV, Fahrzeuge, Wärmepumpe) werden zum bestehenden Eintrag hinzugefügt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Carbon Savings",
+        "description": "Globale Faktoren für alle Quellen. Der Sensor für die Netz-CO2-Intensität (z. B. Electricity Maps) ist optional; der Ersatzwert wird verwendet, wenn er fehlt oder nicht verfügbar ist.",
+        "data": {
+          "grid_intensity_sensor": "Sensor CO2-Intensität Stromnetz",
+          "grid_fallback": "Ersatzwert CO2-Intensität",
+          "tree_factor": "CO2 pro Baum"
+        },
+        "data_description": {
+          "grid_intensity_sensor": "Sensor in gCO2eq/kWh, z. B. aus der Electricity-Maps-Integration.",
+          "grid_fallback": "Wird verwendet, wenn kein Sensor gesetzt oder er nicht verfügbar ist.",
+          "tree_factor": "kg CO2, die einem gepflanzten Baum entsprechen. Kalibrierung über das SolarEdge-Portal: eingespartes CO2 ÷ Bäume."
+        }
+      }
+    }
+  },
+  "config_subentries": {
+    "pv": {
+      "entry_type": "PV-Anlage",
+      "initiate_flow": {
+        "user": "PV-Anlage hinzufügen",
+        "reconfigure": "Neu konfigurieren: PV-Anlage"
+      },
+      "step": {
+        "user": {
+          "title": "PV-Anlage",
+          "description": "Jede erzeugte kWh wird mit der Netz-CO2-Intensität gutgeschrieben.",
+          "data": {
+            "name": "Name",
+            "production_sensor": "Sensor PV-Erzeugung",
+            "initial_value": "Bereits eingespartes CO2"
+          },
+          "data_description": {
+            "production_sensor": "Gesamtzähler (total increasing) der PV-Erzeugung, z. B. der Modbus-Energiezähler des Wechselrichters.",
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+          }
+        },
+        "reconfigure": {
+          "title": "PV-Anlage",
+          "description": "Jede erzeugte kWh wird mit der Netz-CO2-Intensität gutgeschrieben.",
+          "data": {
+            "name": "Name",
+            "production_sensor": "Sensor PV-Erzeugung",
+            "initial_value": "Bereits eingespartes CO2"
+          },
+          "data_description": {
+            "production_sensor": "Gesamtzähler (total increasing) der PV-Erzeugung, z. B. der Modbus-Energiezähler des Wechselrichters.",
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+          }
+        }
+      },
+      "abort": {
+        "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+      }
+    },
+    "vehicle": {
+      "entry_type": "Elektrofahrzeug",
+      "initiate_flow": {
+        "user": "Elektrofahrzeug hinzufügen",
+        "reconfigure": "Neu konfigurieren: Elektrofahrzeug"
+      },
+      "step": {
+        "user": {
+          "title": "Elektrofahrzeug",
+          "description": "Einsparung pro km = Verbrenner-Referenz − EV-Strom × Netz-CO2-Intensität. Jedes Laden (zu Hause und unterwegs) zählt mit Netzintensität, die PV bekommt ihre Gutschrift separat.",
+          "data": {
+            "name": "Name",
+            "odometer_sensor": "Sensor Kilometerstand",
+            "ev_consumption": "Verbrauch E-Auto",
+            "charging_loss": "Ladeverluste",
+            "ice_consumption": "Verbrauch Verbrenner-Referenz",
+            "fuel_type": "Kraftstoff der Referenz",
+            "initial_fuel": "Bereits eingesparter Kraftstoff",
+            "initial_value": "Bereits eingespartes CO2"
+          },
+          "data_description": {
+            "ev_consumption": "Durchschnittsverbrauch des Elektrofahrzeugs.",
+            "charging_loss": "Werden auf den Verbrauch aufgeschlagen.",
+            "ice_consumption": "Verbrauch eines vergleichbaren Verbrenners.",
+            "initial_fuel": "Liter, die vor Beginn der Erfassung eingespart wurden.",
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+          }
+        },
+        "reconfigure": {
+          "title": "Elektrofahrzeug",
+          "description": "Einsparung pro km = Verbrenner-Referenz − EV-Strom × Netz-CO2-Intensität. Jedes Laden (zu Hause und unterwegs) zählt mit Netzintensität, die PV bekommt ihre Gutschrift separat.",
+          "data": {
+            "name": "Name",
+            "odometer_sensor": "Sensor Kilometerstand",
+            "ev_consumption": "Verbrauch E-Auto",
+            "charging_loss": "Ladeverluste",
+            "ice_consumption": "Verbrauch Verbrenner-Referenz",
+            "fuel_type": "Kraftstoff der Referenz",
+            "initial_fuel": "Bereits eingesparter Kraftstoff",
+            "initial_value": "Bereits eingespartes CO2"
+          },
+          "data_description": {
+            "ev_consumption": "Durchschnittsverbrauch des Elektrofahrzeugs.",
+            "charging_loss": "Werden auf den Verbrauch aufgeschlagen.",
+            "ice_consumption": "Verbrauch eines vergleichbaren Verbrenners.",
+            "initial_fuel": "Liter, die vor Beginn der Erfassung eingespart wurden.",
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+          }
+        }
+      },
+      "abort": {
+        "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+      }
+    },
+    "heat_pump": {
+      "entry_type": "Wärmepumpe",
+      "initiate_flow": {
+        "user": "Wärmepumpe hinzufügen",
+        "reconfigure": "Neu konfigurieren: Wärmepumpe"
+      },
+      "step": {
+        "user": {
+          "title": "Wärmepumpe",
+          "description": "Einsparung = nicht verbranntes Heizöl − WP-Strom × Netz-CO2-Intensität.",
+          "data": {
+            "name": "Name",
+            "heat_sensor": "Sensor Wärmemenge",
+            "electricity_sensor": "Sensor Stromverbrauch",
+            "boiler_efficiency": "Wirkungsgrad der ersetzten Ölheizung",
+            "initial_oil": "Bereits eingespartes Heizöl",
+            "initial_value": "Bereits eingespartes CO2"
+          },
+          "data_description": {
+            "heat_sensor": "Von der Wärmepumpe abgegebene Wärme (total increasing).",
+            "electricity_sensor": "Elektrische Energie der Wärmepumpe (total increasing).",
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+          }
+        },
+        "reconfigure": {
+          "title": "Wärmepumpe",
+          "description": "Einsparung = nicht verbranntes Heizöl − WP-Strom × Netz-CO2-Intensität.",
+          "data": {
+            "name": "Name",
+            "heat_sensor": "Sensor Wärmemenge",
+            "electricity_sensor": "Sensor Stromverbrauch",
+            "boiler_efficiency": "Wirkungsgrad der ersetzten Ölheizung",
+            "initial_oil": "Bereits eingespartes Heizöl",
+            "initial_value": "Bereits eingespartes CO2"
+          },
+          "data_description": {
+            "heat_sensor": "Von der Wärmepumpe abgegebene Wärme (total increasing).",
+            "electricity_sensor": "Elektrische Energie der Wärmepumpe (total increasing).",
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+          }
+        }
+      },
+      "abort": {
+        "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+      }
+    }
+  },
+  "selector": {
+    "fuel_type": {
+      "options": {
+        "petrol": "Benzin",
+        "diesel": "Diesel"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "co2_saved_total": {
+        "name": "CO2 eingespart gesamt"
+      },
+      "trees_equivalent": {
+        "name": "Entspricht gepflanzten Bäumen",
+        "unit_of_measurement": "Bäume"
+      },
+      "co2_saved": {
+        "name": "CO2 eingespart"
+      },
+      "fuel_saved": {
+        "name": "Kraftstoff eingespart"
+      },
+      "oil_saved": {
+        "name": "Heizöl eingespart"
+      }
+    }
+  }
+}

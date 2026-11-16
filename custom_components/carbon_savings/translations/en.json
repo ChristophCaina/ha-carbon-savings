@@ -1,0 +1,209 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Carbon Savings",
+        "description": "Global factors used by all sources. The grid intensity sensor (e.g. Electricity Maps) is optional; the fallback is used whenever it is missing or unavailable.",
+        "data": {
+          "grid_intensity_sensor": "Grid carbon intensity sensor",
+          "grid_fallback": "Fallback grid intensity",
+          "tree_factor": "CO2 per tree"
+        },
+        "data_description": {
+          "grid_intensity_sensor": "Sensor in gCO2eq/kWh, e.g. from the Electricity Maps integration.",
+          "grid_fallback": "Used when no sensor is set or it is unavailable.",
+          "tree_factor": "kg CO2 that equal one planted tree. Calibrate with your SolarEdge portal: CO2 saved ÷ trees."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Carbon Savings is already configured. Add sources (PV, vehicles, heat pump) to the existing entry."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Carbon Savings",
+        "description": "Global factors used by all sources. The grid intensity sensor (e.g. Electricity Maps) is optional; the fallback is used whenever it is missing or unavailable.",
+        "data": {
+          "grid_intensity_sensor": "Grid carbon intensity sensor",
+          "grid_fallback": "Fallback grid intensity",
+          "tree_factor": "CO2 per tree"
+        },
+        "data_description": {
+          "grid_intensity_sensor": "Sensor in gCO2eq/kWh, e.g. from the Electricity Maps integration.",
+          "grid_fallback": "Used when no sensor is set or it is unavailable.",
+          "tree_factor": "kg CO2 that equal one planted tree. Calibrate with your SolarEdge portal: CO2 saved ÷ trees."
+        }
+      }
+    }
+  },
+  "config_subentries": {
+    "pv": {
+      "entry_type": "PV system",
+      "initiate_flow": {
+        "user": "Add PV system",
+        "reconfigure": "Reconfigure: PV system"
+      },
+      "step": {
+        "user": {
+          "title": "PV system",
+          "description": "Every produced kWh is credited with the grid intensity.",
+          "data": {
+            "name": "Name",
+            "production_sensor": "Production energy sensor",
+            "initial_value": "CO2 already saved"
+          },
+          "data_description": {
+            "production_sensor": "Lifetime (total increasing) PV production, e.g. the inverter's Modbus energy counter.",
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+          }
+        },
+        "reconfigure": {
+          "title": "PV system",
+          "description": "Every produced kWh is credited with the grid intensity.",
+          "data": {
+            "name": "Name",
+            "production_sensor": "Production energy sensor",
+            "initial_value": "CO2 already saved"
+          },
+          "data_description": {
+            "production_sensor": "Lifetime (total increasing) PV production, e.g. the inverter's Modbus energy counter.",
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+          }
+        }
+      },
+      "abort": {
+        "reconfigure_successful": "Reconfiguration was successful"
+      }
+    },
+    "vehicle": {
+      "entry_type": "Electric vehicle",
+      "initiate_flow": {
+        "user": "Add electric vehicle",
+        "reconfigure": "Reconfigure: Electric vehicle"
+      },
+      "step": {
+        "user": {
+          "title": "Electric vehicle",
+          "description": "Savings per km = combustion reference − EV electricity × grid intensity. All charging (home and public) is charged at grid intensity, PV gets its credit separately.",
+          "data": {
+            "name": "Name",
+            "odometer_sensor": "Odometer sensor",
+            "ev_consumption": "EV consumption",
+            "charging_loss": "Charging losses",
+            "ice_consumption": "Combustion reference consumption",
+            "fuel_type": "Reference fuel",
+            "initial_fuel": "Fuel already saved",
+            "initial_value": "CO2 already saved"
+          },
+          "data_description": {
+            "ev_consumption": "Average consumption of the electric vehicle.",
+            "charging_loss": "Added on top of the consumption.",
+            "ice_consumption": "Consumption of a comparable combustion car.",
+            "initial_fuel": "Litres saved before tracking started.",
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+          }
+        },
+        "reconfigure": {
+          "title": "Electric vehicle",
+          "description": "Savings per km = combustion reference − EV electricity × grid intensity. All charging (home and public) is charged at grid intensity, PV gets its credit separately.",
+          "data": {
+            "name": "Name",
+            "odometer_sensor": "Odometer sensor",
+            "ev_consumption": "EV consumption",
+            "charging_loss": "Charging losses",
+            "ice_consumption": "Combustion reference consumption",
+            "fuel_type": "Reference fuel",
+            "initial_fuel": "Fuel already saved",
+            "initial_value": "CO2 already saved"
+          },
+          "data_description": {
+            "ev_consumption": "Average consumption of the electric vehicle.",
+            "charging_loss": "Added on top of the consumption.",
+            "ice_consumption": "Consumption of a comparable combustion car.",
+            "initial_fuel": "Litres saved before tracking started.",
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+          }
+        }
+      },
+      "abort": {
+        "reconfigure_successful": "Reconfiguration was successful"
+      }
+    },
+    "heat_pump": {
+      "entry_type": "Heat pump",
+      "initiate_flow": {
+        "user": "Add heat pump",
+        "reconfigure": "Reconfigure: Heat pump"
+      },
+      "step": {
+        "user": {
+          "title": "Heat pump",
+          "description": "Savings = heating oil not burned − heat pump electricity × grid intensity.",
+          "data": {
+            "name": "Name",
+            "heat_sensor": "Heat energy sensor",
+            "electricity_sensor": "Electrical energy sensor",
+            "boiler_efficiency": "Efficiency of the replaced oil boiler",
+            "initial_oil": "Heating oil already saved",
+            "initial_value": "CO2 already saved"
+          },
+          "data_description": {
+            "heat_sensor": "Thermal energy delivered by the heat pump (total increasing).",
+            "electricity_sensor": "Electrical energy consumed by the heat pump (total increasing).",
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+          }
+        },
+        "reconfigure": {
+          "title": "Heat pump",
+          "description": "Savings = heating oil not burned − heat pump electricity × grid intensity.",
+          "data": {
+            "name": "Name",
+            "heat_sensor": "Heat energy sensor",
+            "electricity_sensor": "Electrical energy sensor",
+            "boiler_efficiency": "Efficiency of the replaced oil boiler",
+            "initial_oil": "Heating oil already saved",
+            "initial_value": "CO2 already saved"
+          },
+          "data_description": {
+            "heat_sensor": "Thermal energy delivered by the heat pump (total increasing).",
+            "electricity_sensor": "Electrical energy consumed by the heat pump (total increasing).",
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+          }
+        }
+      },
+      "abort": {
+        "reconfigure_successful": "Reconfiguration was successful"
+      }
+    }
+  },
+  "selector": {
+    "fuel_type": {
+      "options": {
+        "petrol": "Petrol",
+        "diesel": "Diesel"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "co2_saved_total": {
+        "name": "CO2 saved total"
+      },
+      "trees_equivalent": {
+        "name": "Trees equivalent",
+        "unit_of_measurement": "trees"
+      },
+      "co2_saved": {
+        "name": "CO2 saved"
+      },
+      "fuel_saved": {
+        "name": "Fuel saved"
+      },
+      "oil_saved": {
+        "name": "Heating oil saved"
+      }
+    }
+  }
+}

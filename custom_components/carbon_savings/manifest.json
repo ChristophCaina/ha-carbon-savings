@@ -1,0 +1,13 @@
+{
+  "domain": "carbon_savings",
+  "name": "Carbon Savings",
+  "codeowners": ["@ChristophCaina"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/ChristophCaina/ha-carbon-savings",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/ChristophCaina/ha-carbon-savings/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
