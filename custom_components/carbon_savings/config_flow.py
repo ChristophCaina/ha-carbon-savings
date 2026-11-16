@@ -23,6 +23,7 @@ from .const import (
     CONF_CHARGING_LOSS,
     CONF_ELECTRICITY_SENSOR,
     CONF_EV_CONSUMPTION,
+    CONF_EV_CONSUMPTION_SENSOR,
     CONF_FUEL_TYPE,
     CONF_GRID_FALLBACK,
     CONF_GRID_INTENSITY_SENSOR,
@@ -189,6 +190,9 @@ class VehicleSubentryFlow(_BaseSubentryFlow):
             {
                 vol.Required(CONF_NAME): str,
                 vol.Required(CONF_ODOMETER_SENSOR): _sensor(SensorDeviceClass.DISTANCE),
+                vol.Optional(CONF_EV_CONSUMPTION_SENSOR): selector.EntitySelector(
+                    selector.EntitySelectorConfig(domain="sensor")
+                ),
                 vol.Required(CONF_EV_CONSUMPTION, default=18.0): _number(
                     "kWh/100 km", max_value=100
                 ),

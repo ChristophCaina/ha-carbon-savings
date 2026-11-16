@@ -6,8 +6,14 @@ from dataclasses import dataclass, field
 import logging
 
 from homeassistant.config_entries import ConfigEntry, ConfigSubentry
-from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN, Platform
+from homeassistant.const import (
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
+    Platform,
+    UnitOfEnergyDistance,
+)
 from homeassistant.core import HomeAssistant
+from homeassistant.util.unit_conversion import EnergyDistanceConverter
 
 from . import calc
 from .const import (
@@ -15,6 +21,7 @@ from .const import (
     CONF_CHARGING_LOSS,
     CONF_ELECTRICITY_SENSOR,
     CONF_EV_CONSUMPTION,
+    CONF_EV_CONSUMPTION_SENSOR,
     CONF_FUEL_TYPE,
     CONF_GRID_FALLBACK,
     CONF_GRID_INTENSITY_SENSOR,
@@ -78,6 +85,35 @@ class CarbonSavingsData:
             value *= 1000.0
         return value
 
+    def ev_consumption(self, entity_id: str | None, fallback: float) -> float:
+        """EV consumption in kWh/100 km from a sensor, or the fixed fallback."""
+        if not entity_id:
+            return fallback
+        state = self.hass.states.get(entity_id)
+        if state is None:
+            return fallback
+        try:
+            value = float(state.state)
+        except ValueError:
+            return fallback
+        unit = state.attributes.get("unit_of_measurement")
+        if unit and unit != UnitOfEnergyDistance.KILO_WATT_HOUR_PER_100_KM:
+            try:
+                value = EnergyDistanceConverter.convert(
+                    value, unit, UnitOfEnergyDistance.KILO_WATT_HOUR_PER_100_KM
+                )
+            except Exception:  # noqa: BLE001 - unknown unit
+                _LOGGER.warning(
+                    "Unsupported unit '%s' on %s, using fixed consumption",
+                    unit,
+                    entity_id,
+                )
+                return fallback
+        # Ignore implausible values (e.g. 0 right after a trip reset)
+        if not 5.0 <= value <= 60.0:
+            return fallback
+        return value
+
     def grid_kg_per_kwh(self) -> float:
         """Current grid carbon intensity in kg/kWh."""
         return calc.grams_to_kg(self.grid_g_per_kwh())
@@ -116,16 +152,21 @@ def _build_tracker(
         )
 
     if subentry.subentry_type == SUBENTRY_VEHICLE:
-        params = calc.VehicleParams(
-            ev_kwh_per_100km=float(conf[CONF_EV_CONSUMPTION]),
-            charging_loss_pct=float(
-                conf.get(CONF_CHARGING_LOSS, DEFAULT_CHARGING_LOSS)
-            ),
-            ice_l_per_100km=float(conf[CONF_ICE_CONSUMPTION]),
-            fuel_kg_co2_per_l=FUEL_CO2_PER_LITRE[conf.get(CONF_FUEL_TYPE, FUEL_PETROL)],
-        )
+        consumption_sensor = conf.get(CONF_EV_CONSUMPTION_SENSOR)
+        fixed_consumption = float(conf[CONF_EV_CONSUMPTION])
+        charging_loss = float(conf.get(CONF_CHARGING_LOSS, DEFAULT_CHARGING_LOSS))
+        ice = float(conf[CONF_ICE_CONSUMPTION])
+        fuel_co2 = FUEL_CO2_PER_LITRE[conf.get(CONF_FUEL_TYPE, FUEL_PETROL)]
 
         def _vehicle(delta: float) -> tuple[float, float]:
+            params = calc.VehicleParams(
+                ev_kwh_per_100km=data.ev_consumption(
+                    consumption_sensor, fixed_consumption
+                ),
+                charging_loss_pct=charging_loss,
+                ice_l_per_100km=ice,
+                fuel_kg_co2_per_l=fuel_co2,
+            )
             return (
                 calc.vehicle_savings(delta, params, data.grid_kg_per_kwh()),
                 calc.vehicle_fuel_saved(delta, params),

@@ -90,7 +90,8 @@
           "data": {
             "name": "Name",
             "odometer_sensor": "Odometer sensor",
-            "ev_consumption": "EV consumption",
+            "ev_consumption_sensor": "EV consumption sensor (optional)",
+            "ev_consumption": "EV consumption (fixed)",
             "charging_loss": "Charging losses",
             "ice_consumption": "Combustion reference consumption",
             "fuel_type": "Reference fuel",
@@ -98,7 +99,8 @@
             "initial_value": "CO2 already saved"
           },
           "data_description": {
-            "ev_consumption": "Average consumption of the electric vehicle.",
+            "ev_consumption_sensor": "Long-term average consumption reported by the vehicle integration (kWh/100km, Wh/km or km/kWh). Values outside 5–60 kWh/100 km are ignored.",
+            "ev_consumption": "Average consumption of the electric vehicle. Used when no sensor is selected or it is unavailable.",
             "charging_loss": "Added on top of the consumption.",
             "ice_consumption": "Consumption of a comparable combustion car.",
             "initial_fuel": "Litres saved before tracking started.",
@@ -111,7 +113,8 @@
           "data": {
             "name": "Name",
             "odometer_sensor": "Odometer sensor",
-            "ev_consumption": "EV consumption",
+            "ev_consumption_sensor": "EV consumption sensor (optional)",
+            "ev_consumption": "EV consumption (fixed)",
             "charging_loss": "Charging losses",
             "ice_consumption": "Combustion reference consumption",
             "fuel_type": "Reference fuel",
@@ -119,7 +122,8 @@
             "initial_value": "CO2 already saved"
           },
           "data_description": {
-            "ev_consumption": "Average consumption of the electric vehicle.",
+            "ev_consumption_sensor": "Long-term average consumption reported by the vehicle integration (kWh/100km, Wh/km or km/kWh). Values outside 5–60 kWh/100 km are ignored.",
+            "ev_consumption": "Average consumption of the electric vehicle. Used when no sensor is selected or it is unavailable.",
             "charging_loss": "Added on top of the consumption.",
             "ice_consumption": "Consumption of a comparable combustion car.",
             "initial_fuel": "Litres saved before tracking started.",

@@ -90,7 +90,8 @@
           "data": {
             "name": "Name",
             "odometer_sensor": "Sensor Kilometerstand",
-            "ev_consumption": "Verbrauch E-Auto",
+            "ev_consumption_sensor": "Sensor Verbrauch E-Auto (optional)",
+            "ev_consumption": "Verbrauch E-Auto (fest)",
             "charging_loss": "Ladeverluste",
             "ice_consumption": "Verbrauch Verbrenner-Referenz",
             "fuel_type": "Kraftstoff der Referenz",
@@ -98,7 +99,8 @@
             "initial_value": "Bereits eingespartes CO2"
           },
           "data_description": {
-            "ev_consumption": "Durchschnittsverbrauch des Elektrofahrzeugs.",
+            "ev_consumption_sensor": "Langzeit-Durchschnittsverbrauch aus der Fahrzeug-Integration (kWh/100km, Wh/km oder km/kWh). Werte außerhalb 5–60 kWh/100 km werden ignoriert.",
+            "ev_consumption": "Durchschnittsverbrauch des Elektrofahrzeugs. Wird verwendet, wenn kein Sensor gewählt oder er nicht verfügbar ist.",
             "charging_loss": "Werden auf den Verbrauch aufgeschlagen.",
             "ice_consumption": "Verbrauch eines vergleichbaren Verbrenners.",
             "initial_fuel": "Liter, die vor Beginn der Erfassung eingespart wurden.",
@@ -111,7 +113,8 @@
           "data": {
             "name": "Name",
             "odometer_sensor": "Sensor Kilometerstand",
-            "ev_consumption": "Verbrauch E-Auto",
+            "ev_consumption_sensor": "Sensor Verbrauch E-Auto (optional)",
+            "ev_consumption": "Verbrauch E-Auto (fest)",
             "charging_loss": "Ladeverluste",
             "ice_consumption": "Verbrauch Verbrenner-Referenz",
             "fuel_type": "Kraftstoff der Referenz",
@@ -119,7 +122,8 @@
             "initial_value": "Bereits eingespartes CO2"
           },
           "data_description": {
-            "ev_consumption": "Durchschnittsverbrauch des Elektrofahrzeugs.",
+            "ev_consumption_sensor": "Langzeit-Durchschnittsverbrauch aus der Fahrzeug-Integration (kWh/100km, Wh/km oder km/kWh). Werte außerhalb 5–60 kWh/100 km werden ignoriert.",
+            "ev_consumption": "Durchschnittsverbrauch des Elektrofahrzeugs. Wird verwendet, wenn kein Sensor gewählt oder er nicht verfügbar ist.",
             "charging_loss": "Werden auf den Verbrauch aufgeschlagen.",
             "ice_consumption": "Verbrauch eines vergleichbaren Verbrenners.",
             "initial_fuel": "Liter, die vor Beginn der Erfassung eingespart wurden.",

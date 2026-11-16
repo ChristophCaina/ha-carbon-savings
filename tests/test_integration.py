@@ -18,6 +18,7 @@ from custom_components.carbon_savings.const import (
     CONF_CHARGING_LOSS,
     CONF_ELECTRICITY_SENSOR,
     CONF_EV_CONSUMPTION,
+    CONF_EV_CONSUMPTION_SENSOR,
     CONF_FUEL_TYPE,
     CONF_GRID_FALLBACK,
     CONF_GRID_INTENSITY_SENSOR,
@@ -276,3 +277,37 @@ async def test_remove_subentry(hass: HomeAssistant) -> None:
         is None
     )
     assert _value(hass, f"{entry.entry_id}_co2_saved_total") == 0.0
+
+
+async def test_vehicle_consumption_sensor(hass: HomeAssistant) -> None:
+    _km(hass, 20000)
+    cons = "sensor.enyaq_avg_consumption"
+    hass.states.async_set(cons, "150", {"unit_of_measurement": "Wh/km"})
+    sub = ConfigSubentryData(
+        data={
+            CONF_ODOMETER_SENSOR: ODO,
+            CONF_EV_CONSUMPTION_SENSOR: cons,
+            CONF_EV_CONSUMPTION: 22.0,
+            CONF_CHARGING_LOSS: 0.0,
+            CONF_ICE_CONSUMPTION: 6.0,
+            CONF_FUEL_TYPE: "petrol",
+            CONF_INITIAL_VALUE: 0.0,
+            CONF_INITIAL_FUEL: 0.0,
+        },
+        subentry_id="car1",
+        subentry_type=SUBENTRY_VEHICLE,
+        title="Enyaq",
+        unique_id=None,
+    )
+    await _setup(hass, _entry([sub]))
+
+    _km(hass, 20100)  # sensor: 150 Wh/km = 15 kWh/100 km
+    await hass.async_block_till_done()
+    first = 6.0 * 2.37 - 15.0 * 0.4
+    assert _value(hass, "car1_co2_saved") == pytest.approx(first, abs=1e-3)
+
+    hass.states.async_set(cons, "0", {"unit_of_measurement": "kWh/100km"})
+    _km(hass, 20200)  # implausible 0 -> fixed 22 kWh/100 km
+    await hass.async_block_till_done()
+    second = 6.0 * 2.37 - 22.0 * 0.4
+    assert _value(hass, "car1_co2_saved") == pytest.approx(first + second, abs=1e-3)

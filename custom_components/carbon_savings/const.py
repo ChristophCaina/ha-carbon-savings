@@ -25,6 +25,7 @@ CONF_PRODUCTION_SENSOR: Final = "production_sensor"
 # Vehicle
 CONF_ODOMETER_SENSOR: Final = "odometer_sensor"
 CONF_EV_CONSUMPTION: Final = "ev_consumption"  # kWh / 100 km
+CONF_EV_CONSUMPTION_SENSOR: Final = "ev_consumption_sensor"  # optional entity
 CONF_CHARGING_LOSS: Final = "charging_loss"  # % on top of consumption
 CONF_ICE_CONSUMPTION: Final = "ice_consumption"  # l / 100 km
 CONF_FUEL_TYPE: Final = "fuel_type"

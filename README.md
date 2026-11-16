@@ -32,7 +32,7 @@ HACS → ⋮ → *Custom repositories* → `https://github.com/ChristophCaina/ha
    - **CO₂ per tree** – calibrate against SolarEdge: *CO₂ saved ÷ trees* from the portal
 2. On the integration entry, add sources:
    - **PV system** – lifetime production counter (e.g. Modbus `total_increasing` kWh)
-   - **Electric vehicle** – odometer, EV consumption, charging losses, combustion reference, fuel type
+   - **Electric vehicle** – odometer, EV consumption (fixed value and/or an optional sensor with the vehicle's long-term average, e.g. kWh/100km, Wh/km, km/kWh), charging losses, combustion reference, fuel type
    - **Heat pump** – heat energy counter, electrical energy counter, efficiency of the replaced oil boiler
 
 Each source has an **initial value** for savings achieved before tracking started (e.g. the SolarEdge portal value, or historical km × yearly grid mix). It can be changed later without losing the tracked history.
