@@ -1,0 +1,29 @@
+# Heat pump "oil equivalent" for the Home Assistant energy dashboard
+# -----------------------------------------------------------------
+# Continues an existing oil/gas statistic (fuel energy = litres × 10 kWh)
+# after switching to a heat pump, so years can be compared in one chart.
+#
+# The heat pump reports *useful heat* delivered to the house, while the old
+# oil statistic counts *fuel energy* fed into the boiler. Dividing the heat by
+# the old boiler's seasonal efficiency gives what the boiler would have burned.
+#
+# Usage:
+#   1. Replace sensor.wp_waermemenge with the heat pump's heat energy counter
+#      (total_increasing, kWh).
+#   2. Adjust 0.75 to the efficiency of the replaced boiler
+#      (keep it identical to "boiler_efficiency" in Carbon Savings).
+#   3. Add this sensor under "Gas consumption" in the energy dashboard,
+#      in addition to the old oil sensor (keep its history!).
+#   4. Do not set a gas price – the real cost is the heat pump's electricity.
+#
+# Put this into configuration.yaml (or a package file).
+
+template:
+  - sensor:
+      - name: "Wärmepumpe Öl-Äquivalent"
+        unique_id: wp_oil_equivalent_kwh
+        unit_of_measurement: kWh
+        device_class: energy
+        state_class: total_increasing
+        state: "{{ (states('sensor.wp_waermemenge') | float(0) / 0.75) | round(1) }}"
+        availability: "{{ has_value('sensor.wp_waermemenge') }}"

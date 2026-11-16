@@ -58,6 +58,10 @@ The grid connection is a separate **footprint view** and is *not* added to "CO�
 - Electricity Maps reports **life-cycle** CO₂eq, which is noticeably higher than direct-emission figures (e.g. UBA). Use the same basis for your initial values to avoid a jump.
 - Heat pump savings can temporarily go down (electricity is counted, no heat yet); the CO₂ sensors therefore use `state_class: total`.
 
+## Examples
+
+- [`examples/heat_pump_oil_equivalent.yaml`](examples/heat_pump_oil_equivalent.yaml) – template sensor that converts heat pump heat into the fuel energy the old oil boiler would have burned, to continue an oil/gas statistic in the energy dashboard.
+
 ## Development
 
 ```bash
