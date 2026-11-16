@@ -61,3 +61,7 @@ ruff check . && ruff format --check .
 ```
 
 Translations are generated from `scripts/gen_translations.py`.
+
+## License
+
+[MIT](LICENSE)
