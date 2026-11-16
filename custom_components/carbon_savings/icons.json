@@ -1,0 +1,14 @@
+{
+  "entity": {
+    "sensor": {
+      "co2_saved_total": { "default": "mdi:molecule-co2" },
+      "trees_equivalent": { "default": "mdi:pine-tree" },
+      "co2_saved": { "default": "mdi:leaf" },
+      "fuel_saved": { "default": "mdi:gas-station" },
+      "oil_saved": { "default": "mdi:barrel" },
+      "grid_import_co2": { "default": "mdi:transmission-tower-import" },
+      "grid_export_co2": { "default": "mdi:transmission-tower-export" },
+      "grid_balance_co2": { "default": "mdi:scale-balance" }
+    }
+  }
+}

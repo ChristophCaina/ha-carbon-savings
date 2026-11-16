@@ -180,6 +180,36 @@
       "abort": {
         "reconfigure_successful": "Reconfiguration was successful"
       }
+    },
+    "grid": {
+      "entry_type": "Grid connection",
+      "initiate_flow": {
+        "user": "Add grid connection",
+        "reconfigure": "Reconfigure: Grid connection"
+      },
+      "step": {
+        "user": {
+          "title": "Grid connection",
+          "description": "Footprint view: emissions of grid imports and credit for exports. Not part of the savings total (that would double count PV).",
+          "data": {
+            "name": "Name",
+            "import_sensor": "Grid import energy sensor",
+            "export_sensor": "Grid export energy sensor (optional)"
+          }
+        },
+        "reconfigure": {
+          "title": "Grid connection",
+          "description": "Footprint view: emissions of grid imports and credit for exports. Not part of the savings total (that would double count PV).",
+          "data": {
+            "name": "Name",
+            "import_sensor": "Grid import energy sensor",
+            "export_sensor": "Grid export energy sensor (optional)"
+          }
+        }
+      },
+      "abort": {
+        "reconfigure_successful": "Reconfiguration was successful"
+      }
     }
   },
   "selector": {
@@ -207,6 +237,15 @@
       },
       "oil_saved": {
         "name": "Heating oil saved"
+      },
+      "grid_import_co2": {
+        "name": "CO2 from grid import"
+      },
+      "grid_export_co2": {
+        "name": "CO2 credit for export"
+      },
+      "grid_balance_co2": {
+        "name": "CO2 balance electricity"
       }
     }
   }

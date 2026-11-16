@@ -24,11 +24,13 @@ from .const import (
     CONF_ELECTRICITY_SENSOR,
     CONF_EV_CONSUMPTION,
     CONF_EV_CONSUMPTION_SENSOR,
+    CONF_EXPORT_SENSOR,
     CONF_FUEL_TYPE,
     CONF_GRID_FALLBACK,
     CONF_GRID_INTENSITY_SENSOR,
     CONF_HEAT_SENSOR,
     CONF_ICE_CONSUMPTION,
+    CONF_IMPORT_SENSOR,
     CONF_INITIAL_FUEL,
     CONF_INITIAL_OIL,
     CONF_INITIAL_VALUE,
@@ -42,6 +44,7 @@ from .const import (
     DOMAIN,
     FUEL_DIESEL,
     FUEL_PETROL,
+    SUBENTRY_GRID,
     SUBENTRY_HEAT_PUMP,
     SUBENTRY_PV,
     SUBENTRY_VEHICLE,
@@ -116,6 +119,7 @@ class CarbonSavingsConfigFlow(ConfigFlow, domain=DOMAIN):
             SUBENTRY_PV: PvSubentryFlow,
             SUBENTRY_VEHICLE: VehicleSubentryFlow,
             SUBENTRY_HEAT_PUMP: HeatPumpSubentryFlow,
+            SUBENTRY_GRID: GridSubentryFlow,
         }
 
 
@@ -232,5 +236,18 @@ class HeatPumpSubentryFlow(_BaseSubentryFlow):
                 ): _number("%", min_value=10, max_value=110, step=1),
                 vol.Required(CONF_INITIAL_VALUE, default=0): _number("kg"),
                 vol.Required(CONF_INITIAL_OIL, default=0): _number("l"),
+            }
+        )
+
+
+class GridSubentryFlow(_BaseSubentryFlow):
+    """Grid connection (footprint view)."""
+
+    def _schema(self) -> vol.Schema:
+        return vol.Schema(
+            {
+                vol.Required(CONF_NAME, default="Grid"): str,
+                vol.Required(CONF_IMPORT_SENSOR): _sensor(SensorDeviceClass.ENERGY),
+                vol.Optional(CONF_EXPORT_SENSOR): _sensor(SensorDeviceClass.ENERGY),
             }
         )

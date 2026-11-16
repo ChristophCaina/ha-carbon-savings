@@ -89,6 +89,7 @@ class SavingsTracker:
         sources: list[TrackedSource],
         initial_co2: float = 0.0,
         initial_secondary: float = 0.0,
+        include_in_total: bool = True,
     ) -> None:
         """Initialize the tracker."""
         self.hass = hass
@@ -96,6 +97,7 @@ class SavingsTracker:
         self.sources = {source.key: source for source in sources}
         self.initial_co2 = initial_co2
         self.initial_secondary = initial_secondary
+        self.include_in_total = include_in_total
         self.accumulated_co2 = 0.0
         self.accumulated_secondary = 0.0
         self.last_values: dict[str, float] = {}

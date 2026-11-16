@@ -63,6 +63,14 @@ T = {
         "petrol": "Petrol",
         "diesel": "Diesel",
         "unit_trees": "trees",
+        "grid": "Grid connection",
+        "grid_add": "Add grid connection",
+        "grid_desc": "Footprint view: emissions of grid imports and credit for exports. Not part of the savings total (that would double count PV).",
+        "import": "Grid import energy sensor",
+        "export": "Grid export energy sensor (optional)",
+        "grid_import_co2": "CO2 from grid import",
+        "grid_export_co2": "CO2 credit for export",
+        "grid_balance_co2": "CO2 balance electricity",
     },
     "de": {
         "hub_title": "Carbon Savings",
@@ -116,6 +124,14 @@ T = {
         "petrol": "Benzin",
         "diesel": "Diesel",
         "unit_trees": "Bäume",
+        "grid": "Stromnetz",
+        "grid_add": "Stromnetz hinzufügen",
+        "grid_desc": "Bilanz-Sicht: Emissionen des Netzbezugs und Gutschrift für die Einspeisung. Fließt nicht in die Gesamteinsparung ein (sonst würde PV doppelt gezählt).",
+        "import": "Sensor Netzbezug",
+        "export": "Sensor Einspeisung (optional)",
+        "grid_import_co2": "CO2 aus Netzbezug",
+        "grid_export_co2": "CO2-Gutschrift Einspeisung",
+        "grid_balance_co2": "CO2-Bilanz Strom",
     },
 }
 
@@ -200,6 +216,26 @@ def build(t: dict[str, str]) -> dict:
                 },
                 {"heat_sensor": t["heat_d"], "electricity_sensor": t["el_d"]},
             ),
+            "grid": {
+                "entry_type": t["grid"],
+                "initiate_flow": {
+                    "user": t["grid_add"],
+                    "reconfigure": f"{t['reconf']}: {t['grid']}",
+                },
+                "step": {
+                    step: {
+                        "title": t["grid"],
+                        "description": t["grid_desc"],
+                        "data": {
+                            "name": t["name"],
+                            "import_sensor": t["import"],
+                            "export_sensor": t["export"],
+                        },
+                    }
+                    for step in ("user", "reconfigure")
+                },
+                "abort": {"reconfigure_successful": t["reconf_ok"]},
+            },
         },
         "selector": {
             "fuel_type": {"options": {"petrol": t["petrol"], "diesel": t["diesel"]}}
@@ -214,6 +250,9 @@ def build(t: dict[str, str]) -> dict:
                 "co2_saved": {"name": t["co2"]},
                 "fuel_saved": {"name": t["fuel_saved"]},
                 "oil_saved": {"name": t["oil_saved"]},
+                "grid_import_co2": {"name": t["grid_import_co2"]},
+                "grid_export_co2": {"name": t["grid_export_co2"]},
+                "grid_balance_co2": {"name": t["grid_balance_co2"]},
             }
         },
     }

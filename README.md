@@ -34,6 +34,9 @@ HACS → ⋮ → *Custom repositories* → `https://github.com/ChristophCaina/ha
    - **PV system** – lifetime production counter (e.g. Modbus `total_increasing` kWh)
    - **Electric vehicle** – odometer, EV consumption (fixed value and/or an optional sensor with the vehicle's long-term average, e.g. kWh/100km, Wh/km, km/kWh), charging losses, combustion reference, fuel type
    - **Heat pump** – heat energy counter, electrical energy counter, efficiency of the replaced oil boiler
+   - **Grid connection** (optional) – import and export counters for a footprint view (see below)
+
+Any kWh counter works as a PV source – a large rooftop system via Modbus as well as a **balcony power plant** measured by a Shelly, a smart plug or the micro-inverter's own integration.
 
 Each source has an **initial value** for savings achieved before tracking started (e.g. the SolarEdge portal value, or historical km × yearly grid mix). It can be changed later without losing the tracked history.
 
@@ -45,6 +48,9 @@ Each source has an **initial value** for savings achieved before tracking starte
 | each source | CO₂ saved (kg) |
 | vehicle | Fuel saved (l) |
 | heat pump | Heating oil saved (l) |
+| grid connection | CO₂ from grid import, CO₂ credit for export, CO₂ balance electricity (credit − import) |
+
+The grid connection is a separate **footprint view** and is *not* added to "CO₂ saved total": PV already gets credited for every produced kWh, so adding the export credit (or subtracting imports) would count the same kWh twice. A positive balance means the household is net carbon-negative on electricity.
 
 ## Notes
 

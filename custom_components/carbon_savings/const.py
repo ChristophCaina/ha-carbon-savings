@@ -10,6 +10,7 @@ DOMAIN: Final = "carbon_savings"
 SUBENTRY_PV: Final = "pv"
 SUBENTRY_VEHICLE: Final = "vehicle"
 SUBENTRY_HEAT_PUMP: Final = "heat_pump"
+SUBENTRY_GRID: Final = "grid"
 
 # Hub (main entry) options
 CONF_GRID_INTENSITY_SENSOR: Final = "grid_intensity_sensor"
@@ -37,6 +38,10 @@ CONF_ELECTRICITY_SENSOR: Final = "electricity_sensor"  # electrical energy consu
 CONF_REPLACED_FUEL: Final = "replaced_fuel"
 CONF_BOILER_EFFICIENCY: Final = "boiler_efficiency"  # %
 CONF_INITIAL_OIL: Final = "initial_oil"  # l oil already saved
+
+# Grid (footprint view, not part of the savings total)
+CONF_IMPORT_SENSOR: Final = "import_sensor"
+CONF_EXPORT_SENSOR: Final = "export_sensor"
 
 FUEL_PETROL: Final = "petrol"
 FUEL_DIESEL: Final = "diesel"

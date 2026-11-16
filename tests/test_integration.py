@@ -19,11 +19,13 @@ from custom_components.carbon_savings.const import (
     CONF_ELECTRICITY_SENSOR,
     CONF_EV_CONSUMPTION,
     CONF_EV_CONSUMPTION_SENSOR,
+    CONF_EXPORT_SENSOR,
     CONF_FUEL_TYPE,
     CONF_GRID_FALLBACK,
     CONF_GRID_INTENSITY_SENSOR,
     CONF_HEAT_SENSOR,
     CONF_ICE_CONSUMPTION,
+    CONF_IMPORT_SENSOR,
     CONF_INITIAL_FUEL,
     CONF_INITIAL_OIL,
     CONF_INITIAL_VALUE,
@@ -31,6 +33,7 @@ from custom_components.carbon_savings.const import (
     CONF_PRODUCTION_SENSOR,
     CONF_TREE_FACTOR,
     DOMAIN,
+    SUBENTRY_GRID,
     SUBENTRY_HEAT_PUMP,
     SUBENTRY_PV,
     SUBENTRY_VEHICLE,
@@ -311,3 +314,39 @@ async def test_vehicle_consumption_sensor(hass: HomeAssistant) -> None:
     await hass.async_block_till_done()
     second = 6.0 * 2.37 - 22.0 * 0.4
     assert _value(hass, "car1_co2_saved") == pytest.approx(first + second, abs=1e-3)
+
+
+async def test_grid_not_in_total(hass: HomeAssistant) -> None:
+    _kwh(hass, PV_SENSOR, 1000)
+    _kwh(hass, "sensor.import", 500)
+    _kwh(hass, "sensor.export", 800)
+    grid = ConfigSubentryData(
+        data={CONF_IMPORT_SENSOR: "sensor.import", CONF_EXPORT_SENSOR: "sensor.export"},
+        subentry_id="grid1",
+        subentry_type=SUBENTRY_GRID,
+        title="Netz",
+        unique_id=None,
+    )
+    entry = _entry([_pv_sub(), grid])
+    await _setup(hass, entry)
+
+    _kwh(hass, PV_SENSOR, 1010)
+    _kwh(hass, "sensor.import", 505)
+    _kwh(hass, "sensor.export", 808)
+    await hass.async_block_till_done()
+    assert _value(hass, "grid1_grid_import_co2") == pytest.approx(2.0)
+    assert _value(hass, "grid1_grid_export_co2") == pytest.approx(3.2)
+    assert _value(hass, "grid1_grid_balance_co2") == pytest.approx(1.2)
+    assert _value(hass, f"{entry.entry_id}_co2_saved_total") == pytest.approx(4.0)
+
+
+async def test_grid_subentry_flow(hass: HomeAssistant) -> None:
+    entry = _entry([])
+    await _setup(hass, entry)
+    result = await hass.config_entries.subentries.async_init(
+        (entry.entry_id, SUBENTRY_GRID), context={"source": config_entries.SOURCE_USER}
+    )
+    result = await hass.config_entries.subentries.async_configure(
+        result["flow_id"], {CONF_NAME: "Netz", CONF_IMPORT_SENSOR: "sensor.import"}
+    )
+    assert result["type"] is FlowResultType.CREATE_ENTRY

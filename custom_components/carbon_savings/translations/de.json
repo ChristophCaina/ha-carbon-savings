@@ -180,6 +180,36 @@
       "abort": {
         "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
       }
+    },
+    "grid": {
+      "entry_type": "Stromnetz",
+      "initiate_flow": {
+        "user": "Stromnetz hinzufügen",
+        "reconfigure": "Neu konfigurieren: Stromnetz"
+      },
+      "step": {
+        "user": {
+          "title": "Stromnetz",
+          "description": "Bilanz-Sicht: Emissionen des Netzbezugs und Gutschrift für die Einspeisung. Fließt nicht in die Gesamteinsparung ein (sonst würde PV doppelt gezählt).",
+          "data": {
+            "name": "Name",
+            "import_sensor": "Sensor Netzbezug",
+            "export_sensor": "Sensor Einspeisung (optional)"
+          }
+        },
+        "reconfigure": {
+          "title": "Stromnetz",
+          "description": "Bilanz-Sicht: Emissionen des Netzbezugs und Gutschrift für die Einspeisung. Fließt nicht in die Gesamteinsparung ein (sonst würde PV doppelt gezählt).",
+          "data": {
+            "name": "Name",
+            "import_sensor": "Sensor Netzbezug",
+            "export_sensor": "Sensor Einspeisung (optional)"
+          }
+        }
+      },
+      "abort": {
+        "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+      }
     }
   },
   "selector": {
@@ -207,6 +237,15 @@
       },
       "oil_saved": {
         "name": "Heizöl eingespart"
+      },
+      "grid_import_co2": {
+        "name": "CO2 aus Netzbezug"
+      },
+      "grid_export_co2": {
+        "name": "CO2-Gutschrift Einspeisung"
+      },
+      "grid_balance_co2": {
+        "name": "CO2-Bilanz Strom"
       }
     }
   }

@@ -15,7 +15,7 @@ from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from . import CarbonSavingsConfigEntry, CarbonSavingsData
-from .const import DOMAIN, SUBENTRY_HEAT_PUMP, SUBENTRY_VEHICLE
+from .const import DOMAIN, SUBENTRY_GRID, SUBENTRY_HEAT_PUMP, SUBENTRY_VEHICLE
 from .tracker import SavingsTracker
 
 PARALLEL_UPDATES = 0
@@ -33,6 +33,16 @@ async def async_setup_entry(
 
     for subentry_id, tracker in data.trackers.items():
         subentry = entry.subentries[subentry_id]
+        if subentry.subentry_type == SUBENTRY_GRID:
+            async_add_entities(
+                [
+                    GridSensor(subentry, tracker, "grid_import_co2"),
+                    GridSensor(subentry, tracker, "grid_export_co2"),
+                    GridSensor(subentry, tracker, "grid_balance_co2"),
+                ],
+                config_subentry_id=subentry_id,
+            )
+            continue
         entities: list[SensorEntity] = [SubentryCo2Sensor(subentry, tracker)]
         if subentry.subentry_type == SUBENTRY_VEHICLE:
             entities.append(SubentryLitreSensor(subentry, tracker, "fuel_saved"))
@@ -166,3 +176,30 @@ class SubentryLitreSensor(_SubentrySensor):
     @property
     def native_value(self) -> float:
         return round(self._tracker.secondary_total, 3)
+
+
+class GridSensor(_SubentrySensor):
+    """Grid footprint: emissions of imports, credit for exports, balance."""
+
+    _attr_device_class = SensorDeviceClass.WEIGHT
+    _attr_state_class = SensorStateClass.TOTAL
+    _attr_native_unit_of_measurement = UnitOfMass.KILOGRAMS
+    _attr_suggested_display_precision = 1
+
+    def __init__(
+        self, subentry: ConfigSubentry, tracker: SavingsTracker, key: str
+    ) -> None:
+        super().__init__(subentry, tracker)
+        self._key = key
+        self._attr_translation_key = key
+        self._attr_unique_id = f"{subentry.subentry_id}_{key}"
+
+    @property
+    def native_value(self) -> float:
+        imported = self._tracker.secondary_total
+        exported = self._tracker.co2_total
+        if self._key == "grid_import_co2":
+            return round(imported, 3)
+        if self._key == "grid_export_co2":
+            return round(exported, 3)
+        return round(exported - imported, 3)

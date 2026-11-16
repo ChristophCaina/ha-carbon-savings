@@ -22,11 +22,13 @@ from .const import (
     CONF_ELECTRICITY_SENSOR,
     CONF_EV_CONSUMPTION,
     CONF_EV_CONSUMPTION_SENSOR,
+    CONF_EXPORT_SENSOR,
     CONF_FUEL_TYPE,
     CONF_GRID_FALLBACK,
     CONF_GRID_INTENSITY_SENSOR,
     CONF_HEAT_SENSOR,
     CONF_ICE_CONSUMPTION,
+    CONF_IMPORT_SENSOR,
     CONF_INITIAL_FUEL,
     CONF_INITIAL_OIL,
     CONF_INITIAL_VALUE,
@@ -41,6 +43,7 @@ from .const import (
     FUEL_HEATING_OIL,
     FUEL_KWH_PER_LITRE,
     FUEL_PETROL,
+    SUBENTRY_GRID,
     SUBENTRY_HEAT_PUMP,
     SUBENTRY_PV,
     SUBENTRY_VEHICLE,
@@ -121,7 +124,11 @@ class CarbonSavingsData:
     @property
     def co2_total(self) -> float:
         """Sum of all trackers in kg."""
-        return sum(tracker.co2_total for tracker in self.trackers.values())
+        return sum(
+            tracker.co2_total
+            for tracker in self.trackers.values()
+            if tracker.include_in_total
+        )
 
 
 type CarbonSavingsConfigEntry = ConfigEntry[CarbonSavingsData]
@@ -216,6 +223,24 @@ def _build_tracker(
             ],
             initial_co2=initial_co2,
             initial_secondary=float(conf.get(CONF_INITIAL_OIL, 0.0)),
+        )
+
+    if subentry.subentry_type == SUBENTRY_GRID:
+        # co2 = credit for exported kWh, secondary = emissions of imported kWh
+
+        def _import(delta: float) -> tuple[float, float]:
+            return 0.0, delta * data.grid_kg_per_kwh()
+
+        def _export(delta: float) -> tuple[float, float]:
+            return delta * data.grid_kg_per_kwh(), 0.0
+
+        sources = [
+            TrackedSource("import", conf[CONF_IMPORT_SENSOR], KIND_ENERGY, _import)
+        ]
+        if export := conf.get(CONF_EXPORT_SENSOR):
+            sources.append(TrackedSource("export", export, KIND_ENERGY, _export))
+        return SavingsTracker(
+            hass, subentry.subentry_id, sources, include_in_total=False
         )
 
     _LOGGER.warning("Unknown subentry type %s", subentry.subentry_type)
