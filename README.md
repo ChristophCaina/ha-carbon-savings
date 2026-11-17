@@ -62,6 +62,15 @@ The grid connection is a separate **footprint view** and is *not* added to "COâ‚
 
 - [`examples/heat_pump_oil_equivalent.yaml`](examples/heat_pump_oil_equivalent.yaml) â€“ template sensor that converts heat pump heat into the fuel energy the old oil boiler would have burned, to continue an oil/gas statistic in the energy dashboard.
 
+## Icon
+
+The integration ships its own icon in `custom_components/carbon_savings/brand/` (shown by Home Assistant 2026.3 and newer). The source is `assets/icon.svg`; regenerate the PNGs with:
+
+```bash
+rsvg-convert -w 256 -h 256 assets/icon.svg -o custom_components/carbon_savings/brand/icon.png
+rsvg-convert -w 512 -h 512 assets/icon.svg -o custom_components/carbon_savings/brand/icon@2x.png
+```
+
 ## Development
 
 ```bash
