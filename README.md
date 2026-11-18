@@ -13,7 +13,7 @@ Every component is compared with its fossil alternative, and **every electrical 
 | PV | produced kWh × grid intensity |
 | Electric vehicle | km × combustion reference (l/100 km × kg/l) − km × EV consumption × (1 + charging losses) × grid intensity |
 | Heat pump | heat kWh ÷ (boiler efficiency × 10 kWh/l) × 2.65 kg/l − heat pump kWh × grid intensity |
-| Trees | total CO₂ ÷ kg CO₂ per tree |
+| Trees | fixed: total CO₂ ÷ kg CO₂ per tree · growth curve: Σ CO₂ of each source ÷ what one tree planted at that source's start date has absorbed by today |
 
 The sum is exactly the difference between "no PV, combustion car, oil boiler" and the real household – **without double counting**, and without having to know where a particular kWh came from. Public charging is covered automatically.
 
@@ -29,7 +29,9 @@ HACS → ⋮ → *Custom repositories* → `https://github.com/ChristophCaina/ha
 1. *Settings → Devices & services → Add integration → Carbon Savings*
    - **Grid carbon intensity sensor** (optional), e.g. from the [Electricity Maps](https://www.home-assistant.io/integrations/co2signal/) integration (g CO₂eq/kWh)
    - **Fallback intensity** used when the sensor is missing/unavailable
-   - **CO₂ per tree** – calibrate against SolarEdge: *CO₂ saved ÷ trees* from the portal
+   - **Tree calculation**
+     - *Fixed*: CO₂ ÷ kg per tree (default 60 kg = seedling grown for 10 years, US EPA; SolarEdge uses ≈ 33.5 kg)
+     - *Growth curve*: "How many trees, planted when each source went into operation, would have absorbed its savings by today?" Yearly uptake rises linearly from 5.5 kg (first year) to 23.5 kg (fully grown after 18 years); all three values are configurable. Sources need an *In operation since* date, otherwise the fixed value is used. The tree count is refreshed hourly; the attribute `by_source` shows the split.
 2. On the integration entry, add sources:
    - **PV system** – lifetime production counter (e.g. Modbus `total_increasing` kWh)
    - **Electric vehicle** – odometer, EV consumption (fixed value and/or an optional sensor with the vehicle's long-term average, e.g. kWh/100km, Wh/km, km/kWh), charging losses, combustion reference, fuel type

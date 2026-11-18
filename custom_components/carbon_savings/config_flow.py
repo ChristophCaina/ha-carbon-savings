@@ -36,11 +36,19 @@ from .const import (
     CONF_INITIAL_VALUE,
     CONF_ODOMETER_SENSOR,
     CONF_PRODUCTION_SENSOR,
+    CONF_START_DATE,
     CONF_TREE_FACTOR,
+    CONF_TREE_MODE,
+    CONF_TREE_RATE_MATURE,
+    CONF_TREE_RATE_YOUNG,
+    CONF_TREE_YEARS_TO_MATURE,
     DEFAULT_BOILER_EFFICIENCY,
     DEFAULT_CHARGING_LOSS,
     DEFAULT_GRID_FALLBACK,
     DEFAULT_TREE_FACTOR,
+    DEFAULT_TREE_RATE_MATURE,
+    DEFAULT_TREE_RATE_YOUNG,
+    DEFAULT_TREE_YEARS_TO_MATURE,
     DOMAIN,
     FUEL_DIESEL,
     FUEL_PETROL,
@@ -48,6 +56,8 @@ from .const import (
     SUBENTRY_HEAT_PUMP,
     SUBENTRY_PV,
     SUBENTRY_VEHICLE,
+    TREE_MODE_FIXED,
+    TREE_MODE_GROWTH,
 )
 
 
@@ -79,9 +89,24 @@ HUB_SCHEMA = vol.Schema(
         vol.Required(CONF_GRID_FALLBACK, default=DEFAULT_GRID_FALLBACK): _number(
             "g/kWh", max_value=2000, step=1
         ),
+        vol.Required(CONF_TREE_MODE, default=TREE_MODE_FIXED): selector.SelectSelector(
+            selector.SelectSelectorConfig(
+                options=[TREE_MODE_FIXED, TREE_MODE_GROWTH],
+                translation_key=CONF_TREE_MODE,
+            )
+        ),
         vol.Required(CONF_TREE_FACTOR, default=DEFAULT_TREE_FACTOR): _number(
             "kg", min_value=0.1, max_value=10000
         ),
+        vol.Required(CONF_TREE_RATE_YOUNG, default=DEFAULT_TREE_RATE_YOUNG): _number(
+            "kg/a", max_value=1000
+        ),
+        vol.Required(CONF_TREE_RATE_MATURE, default=DEFAULT_TREE_RATE_MATURE): _number(
+            "kg/a", max_value=1000
+        ),
+        vol.Required(
+            CONF_TREE_YEARS_TO_MATURE, default=DEFAULT_TREE_YEARS_TO_MATURE
+        ): _number("a", max_value=200, step=1),
     }
 )
 
@@ -182,6 +207,7 @@ class PvSubentryFlow(_BaseSubentryFlow):
                 vol.Required(CONF_NAME, default="PV"): str,
                 vol.Required(CONF_PRODUCTION_SENSOR): _sensor(SensorDeviceClass.ENERGY),
                 vol.Required(CONF_INITIAL_VALUE, default=0): _number("kg"),
+                vol.Optional(CONF_START_DATE): selector.DateSelector(),
             }
         )
 
@@ -215,6 +241,7 @@ class VehicleSubentryFlow(_BaseSubentryFlow):
                     )
                 ),
                 vol.Required(CONF_INITIAL_VALUE, default=0): _number("kg"),
+                vol.Optional(CONF_START_DATE): selector.DateSelector(),
                 vol.Required(CONF_INITIAL_FUEL, default=0): _number("l"),
             }
         )
@@ -235,6 +262,7 @@ class HeatPumpSubentryFlow(_BaseSubentryFlow):
                     CONF_BOILER_EFFICIENCY, default=DEFAULT_BOILER_EFFICIENCY
                 ): _number("%", min_value=10, max_value=110, step=1),
                 vol.Required(CONF_INITIAL_VALUE, default=0): _number("kg"),
+                vol.Optional(CONF_START_DATE): selector.DateSelector(),
                 vol.Required(CONF_INITIAL_OIL, default=0): _number("l"),
             }
         )

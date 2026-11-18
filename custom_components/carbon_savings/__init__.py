@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import date
 import logging
 
 from homeassistant.config_entries import ConfigEntry, ConfigSubentry
@@ -13,6 +14,7 @@ from homeassistant.const import (
     UnitOfEnergyDistance,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.util import dt as dt_util
 from homeassistant.util.unit_conversion import EnergyDistanceConverter
 
 from . import calc
@@ -34,19 +36,29 @@ from .const import (
     CONF_INITIAL_VALUE,
     CONF_ODOMETER_SENSOR,
     CONF_PRODUCTION_SENSOR,
+    CONF_START_DATE,
     CONF_TREE_FACTOR,
+    CONF_TREE_MODE,
+    CONF_TREE_RATE_MATURE,
+    CONF_TREE_RATE_YOUNG,
+    CONF_TREE_YEARS_TO_MATURE,
     DEFAULT_BOILER_EFFICIENCY,
     DEFAULT_CHARGING_LOSS,
     DEFAULT_GRID_FALLBACK,
     DEFAULT_TREE_FACTOR,
+    DEFAULT_TREE_RATE_MATURE,
+    DEFAULT_TREE_RATE_YOUNG,
+    DEFAULT_TREE_YEARS_TO_MATURE,
     FUEL_CO2_PER_LITRE,
     FUEL_HEATING_OIL,
     FUEL_KWH_PER_LITRE,
     FUEL_PETROL,
+    MIN_TREE_AGE_YEARS,
     SUBENTRY_GRID,
     SUBENTRY_HEAT_PUMP,
     SUBENTRY_PV,
     SUBENTRY_VEHICLE,
+    TREE_MODE_GROWTH,
 )
 from .tracker import KIND_DISTANCE, KIND_ENERGY, SavingsTracker, TrackedSource
 
@@ -65,8 +77,40 @@ class CarbonSavingsData:
 
     @property
     def tree_factor(self) -> float:
-        """kg CO2 per tree equivalent."""
+        """kg CO2 per tree equivalent (fixed mode / fallback)."""
         return float(self.entry.options.get(CONF_TREE_FACTOR, DEFAULT_TREE_FACTOR))
+
+    @property
+    def tree_growth_mode(self) -> bool:
+        """True if trees are calculated with a growth curve."""
+        return self.entry.options.get(CONF_TREE_MODE) == TREE_MODE_GROWTH
+
+    def kg_per_tree(self, start: date | None, today: date | None = None) -> float:
+        """kg CO2 one tree represents for a source in operation since start."""
+        if not self.tree_growth_mode or start is None:
+            return self.tree_factor
+        today = today or dt_util.now().date()
+        age = max((today - start).days / 365.25, MIN_TREE_AGE_YEARS)
+        opts = self.entry.options
+        return calc.tree_cumulative_uptake(
+            age,
+            float(opts.get(CONF_TREE_RATE_YOUNG, DEFAULT_TREE_RATE_YOUNG)),
+            float(opts.get(CONF_TREE_RATE_MATURE, DEFAULT_TREE_RATE_MATURE)),
+            float(opts.get(CONF_TREE_YEARS_TO_MATURE, DEFAULT_TREE_YEARS_TO_MATURE)),
+        )
+
+    def trees_by_source(self, today: date | None = None) -> dict[str, float]:
+        """Tree equivalent per savings source (subentry title -> trees)."""
+        result: dict[str, float] = {}
+        for subentry_id, tracker in self.trackers.items():
+            if not tracker.include_in_total:
+                continue
+            subentry = self.entry.subentries[subentry_id]
+            start = _parse_date(subentry.data.get(CONF_START_DATE))
+            factor = self.kg_per_tree(start, today)
+            if factor > 0:
+                result[subentry.title] = tracker.co2_total / factor
+        return result
 
     def grid_g_per_kwh(self) -> float:
         """Current grid carbon intensity in g/kWh (sensor or fallback)."""
@@ -129,6 +173,15 @@ class CarbonSavingsData:
             for tracker in self.trackers.values()
             if tracker.include_in_total
         )
+
+
+def _parse_date(value: str | None) -> date | None:
+    if not value:
+        return None
+    try:
+        return date.fromisoformat(str(value))
+    except ValueError:
+        return None
 
 
 type CarbonSavingsConfigEntry = ConfigEntry[CarbonSavingsData]

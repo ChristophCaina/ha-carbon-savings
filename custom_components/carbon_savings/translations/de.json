@@ -7,12 +7,20 @@
         "data": {
           "grid_intensity_sensor": "Sensor CO2-Intensität Stromnetz",
           "grid_fallback": "Ersatzwert CO2-Intensität",
-          "tree_factor": "CO2 pro Baum"
+          "tree_mode": "Berechnung der Bäume",
+          "tree_factor": "CO2 pro Baum (fest)",
+          "tree_rate_young": "Aufnahme im ersten Jahr",
+          "tree_rate_mature": "Aufnahme ausgewachsen",
+          "tree_years_to_mature": "Jahre bis ausgewachsen"
         },
         "data_description": {
           "grid_intensity_sensor": "Sensor in gCO2eq/kWh, z. B. aus der Electricity-Maps-Integration.",
           "grid_fallback": "Wird verwendet, wenn kein Sensor gesetzt oder er nicht verfügbar ist.",
-          "tree_factor": "kg CO2, die einem gepflanzten Baum entsprechen. Kalibrierung über das SolarEdge-Portal: eingespartes CO2 ÷ Bäume."
+          "tree_mode": "Fest: CO2 ÷ kg pro Baum. Wachstumskurve: Wie viele Bäume, gepflanzt bei Inbetriebnahme der jeweiligen Quelle, hätten deren Einsparung bis heute gebunden.",
+          "tree_factor": "kg CO2, die im festen Modus einem gepflanzten Baum entsprechen (z. B. 60 kg = Setzling nach 10 Jahren, US EPA). Wird auch für Quellen ohne Startdatum verwendet.",
+          "tree_rate_young": "kg CO2 pro Jahr eines frisch gepflanzten Baums (Wachstumskurve).",
+          "tree_rate_mature": "kg CO2 pro Jahr eines ausgewachsenen Baums (Wachstumskurve).",
+          "tree_years_to_mature": "Die Aufnahme steigt in diesem Zeitraum linear vom Wert im ersten Jahr auf den Endwert."
         }
       }
     },
@@ -28,12 +36,20 @@
         "data": {
           "grid_intensity_sensor": "Sensor CO2-Intensität Stromnetz",
           "grid_fallback": "Ersatzwert CO2-Intensität",
-          "tree_factor": "CO2 pro Baum"
+          "tree_mode": "Berechnung der Bäume",
+          "tree_factor": "CO2 pro Baum (fest)",
+          "tree_rate_young": "Aufnahme im ersten Jahr",
+          "tree_rate_mature": "Aufnahme ausgewachsen",
+          "tree_years_to_mature": "Jahre bis ausgewachsen"
         },
         "data_description": {
           "grid_intensity_sensor": "Sensor in gCO2eq/kWh, z. B. aus der Electricity-Maps-Integration.",
           "grid_fallback": "Wird verwendet, wenn kein Sensor gesetzt oder er nicht verfügbar ist.",
-          "tree_factor": "kg CO2, die einem gepflanzten Baum entsprechen. Kalibrierung über das SolarEdge-Portal: eingespartes CO2 ÷ Bäume."
+          "tree_mode": "Fest: CO2 ÷ kg pro Baum. Wachstumskurve: Wie viele Bäume, gepflanzt bei Inbetriebnahme der jeweiligen Quelle, hätten deren Einsparung bis heute gebunden.",
+          "tree_factor": "kg CO2, die im festen Modus einem gepflanzten Baum entsprechen (z. B. 60 kg = Setzling nach 10 Jahren, US EPA). Wird auch für Quellen ohne Startdatum verwendet.",
+          "tree_rate_young": "kg CO2 pro Jahr eines frisch gepflanzten Baums (Wachstumskurve).",
+          "tree_rate_mature": "kg CO2 pro Jahr eines ausgewachsenen Baums (Wachstumskurve).",
+          "tree_years_to_mature": "Die Aufnahme steigt in diesem Zeitraum linear vom Wert im ersten Jahr auf den Endwert."
         }
       }
     }
@@ -52,11 +68,13 @@
           "data": {
             "name": "Name",
             "production_sensor": "Sensor PV-Erzeugung",
-            "initial_value": "Bereits eingespartes CO2"
+            "initial_value": "Bereits eingespartes CO2",
+            "start_date": "In Betrieb seit"
           },
           "data_description": {
             "production_sensor": "Gesamtzähler (total increasing) der PV-Erzeugung, z. B. der Modbus-Energiezähler des Wechselrichters.",
-            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal).",
+            "start_date": "Datum der Inbetriebnahme bzw. Anschaffung. Wird für die Wachstumskurve der Bäume verwendet."
           }
         },
         "reconfigure": {
@@ -65,11 +83,13 @@
           "data": {
             "name": "Name",
             "production_sensor": "Sensor PV-Erzeugung",
-            "initial_value": "Bereits eingespartes CO2"
+            "initial_value": "Bereits eingespartes CO2",
+            "start_date": "In Betrieb seit"
           },
           "data_description": {
             "production_sensor": "Gesamtzähler (total increasing) der PV-Erzeugung, z. B. der Modbus-Energiezähler des Wechselrichters.",
-            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal).",
+            "start_date": "Datum der Inbetriebnahme bzw. Anschaffung. Wird für die Wachstumskurve der Bäume verwendet."
           }
         }
       },
@@ -96,7 +116,8 @@
             "ice_consumption": "Verbrauch Verbrenner-Referenz",
             "fuel_type": "Kraftstoff der Referenz",
             "initial_fuel": "Bereits eingesparter Kraftstoff",
-            "initial_value": "Bereits eingespartes CO2"
+            "initial_value": "Bereits eingespartes CO2",
+            "start_date": "In Betrieb seit"
           },
           "data_description": {
             "ev_consumption_sensor": "Langzeit-Durchschnittsverbrauch aus der Fahrzeug-Integration (kWh/100km, Wh/km oder km/kWh). Werte außerhalb 5–60 kWh/100 km werden ignoriert.",
@@ -104,7 +125,8 @@
             "charging_loss": "Werden auf den Verbrauch aufgeschlagen.",
             "ice_consumption": "Verbrauch eines vergleichbaren Verbrenners.",
             "initial_fuel": "Liter, die vor Beginn der Erfassung eingespart wurden.",
-            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal).",
+            "start_date": "Datum der Inbetriebnahme bzw. Anschaffung. Wird für die Wachstumskurve der Bäume verwendet."
           }
         },
         "reconfigure": {
@@ -119,7 +141,8 @@
             "ice_consumption": "Verbrauch Verbrenner-Referenz",
             "fuel_type": "Kraftstoff der Referenz",
             "initial_fuel": "Bereits eingesparter Kraftstoff",
-            "initial_value": "Bereits eingespartes CO2"
+            "initial_value": "Bereits eingespartes CO2",
+            "start_date": "In Betrieb seit"
           },
           "data_description": {
             "ev_consumption_sensor": "Langzeit-Durchschnittsverbrauch aus der Fahrzeug-Integration (kWh/100km, Wh/km oder km/kWh). Werte außerhalb 5–60 kWh/100 km werden ignoriert.",
@@ -127,7 +150,8 @@
             "charging_loss": "Werden auf den Verbrauch aufgeschlagen.",
             "ice_consumption": "Verbrauch eines vergleichbaren Verbrenners.",
             "initial_fuel": "Liter, die vor Beginn der Erfassung eingespart wurden.",
-            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal).",
+            "start_date": "Datum der Inbetriebnahme bzw. Anschaffung. Wird für die Wachstumskurve der Bäume verwendet."
           }
         }
       },
@@ -151,12 +175,14 @@
             "electricity_sensor": "Sensor Stromverbrauch",
             "boiler_efficiency": "Wirkungsgrad der ersetzten Ölheizung",
             "initial_oil": "Bereits eingespartes Heizöl",
-            "initial_value": "Bereits eingespartes CO2"
+            "initial_value": "Bereits eingespartes CO2",
+            "start_date": "In Betrieb seit"
           },
           "data_description": {
             "heat_sensor": "Von der Wärmepumpe abgegebene Wärme (total increasing).",
             "electricity_sensor": "Elektrische Energie der Wärmepumpe (total increasing).",
-            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal).",
+            "start_date": "Datum der Inbetriebnahme bzw. Anschaffung. Wird für die Wachstumskurve der Bäume verwendet."
           }
         },
         "reconfigure": {
@@ -168,12 +194,14 @@
             "electricity_sensor": "Sensor Stromverbrauch",
             "boiler_efficiency": "Wirkungsgrad der ersetzten Ölheizung",
             "initial_oil": "Bereits eingespartes Heizöl",
-            "initial_value": "Bereits eingespartes CO2"
+            "initial_value": "Bereits eingespartes CO2",
+            "start_date": "In Betrieb seit"
           },
           "data_description": {
             "heat_sensor": "Von der Wärmepumpe abgegebene Wärme (total increasing).",
             "electricity_sensor": "Elektrische Energie der Wärmepumpe (total increasing).",
-            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal)."
+            "initial_value": "kg CO2, die vor Beginn der Erfassung eingespart wurden (z. B. Wert aus dem SolarEdge-Portal).",
+            "start_date": "Datum der Inbetriebnahme bzw. Anschaffung. Wird für die Wachstumskurve der Bäume verwendet."
           }
         }
       },
@@ -213,6 +241,12 @@
     }
   },
   "selector": {
+    "tree_mode": {
+      "options": {
+        "fixed": "Fester Wert pro Baum",
+        "growth": "Wachstumskurve ab Inbetriebnahme"
+      }
+    },
     "fuel_type": {
       "options": {
         "petrol": "Benzin",

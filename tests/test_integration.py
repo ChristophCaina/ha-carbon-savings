@@ -31,7 +31,9 @@ from custom_components.carbon_savings.const import (
     CONF_INITIAL_VALUE,
     CONF_ODOMETER_SENSOR,
     CONF_PRODUCTION_SENSOR,
+    CONF_START_DATE,
     CONF_TREE_FACTOR,
+    CONF_TREE_MODE,
     DOMAIN,
     SUBENTRY_GRID,
     SUBENTRY_HEAT_PUMP,
@@ -109,7 +111,8 @@ async def test_config_flow_single_instance(hass: HomeAssistant) -> None:
         result["flow_id"], {CONF_GRID_FALLBACK: 380, CONF_TREE_FACTOR: 60}
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert result["options"] == {CONF_GRID_FALLBACK: 380, CONF_TREE_FACTOR: 60}
+    assert result["options"][CONF_GRID_FALLBACK] == 380
+    assert result["options"][CONF_TREE_MODE] == "fixed"
 
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": config_entries.SOURCE_USER}
@@ -350,3 +353,53 @@ async def test_grid_subentry_flow(hass: HomeAssistant) -> None:
         result["flow_id"], {CONF_NAME: "Netz", CONF_IMPORT_SENSOR: "sensor.import"}
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
+
+
+async def test_trees_growth_mode(hass: HomeAssistant) -> None:
+    from datetime import date, timedelta
+
+    from homeassistant.util import dt as dt_util
+
+    from custom_components.carbon_savings import calc
+
+    _kwh(hass, PV_SENSOR, 1000)
+    _km(hass, 1000)
+    today = dt_util.now().date()
+    pv_start = (today - timedelta(days=round(8 * 365.25))).isoformat()
+    pv = ConfigSubentryData(
+        data={
+            CONF_PRODUCTION_SENSOR: PV_SENSOR,
+            CONF_INITIAL_VALUE: 7600.0,
+            CONF_START_DATE: pv_start,
+        },
+        subentry_id="pv1",
+        subentry_type=SUBENTRY_PV,
+        title="PV",
+        unique_id=None,
+    )
+    car = ConfigSubentryData(
+        data={
+            CONF_ODOMETER_SENSOR: ODO,
+            CONF_EV_CONSUMPTION: 20.0,
+            CONF_CHARGING_LOSS: 10.0,
+            CONF_ICE_CONSUMPTION: 6.0,
+            CONF_FUEL_TYPE: "petrol",
+            CONF_INITIAL_VALUE: 500.0,
+            CONF_INITIAL_FUEL: 0.0,
+        },  # no start date -> fixed factor fallback
+        subentry_id="car1",
+        subentry_type=SUBENTRY_VEHICLE,
+        title="Auto",
+        unique_id=None,
+    )
+    entry = _entry([pv, car], **{CONF_TREE_MODE: "growth"})
+    await _setup(hass, entry)
+
+    per_tree = calc.tree_cumulative_uptake(
+        (today - date.fromisoformat(pv_start)).days / 365.25, 5.5, 23.5, 18
+    )
+    expected = 7600.0 / per_tree + 500.0 / 50.0
+    state = hass.states.get(_entity(hass, f"{entry.entry_id}_trees_equivalent"))
+    assert float(state.state) == pytest.approx(expected, rel=1e-3)
+    assert state.attributes["mode"] == "growth"
+    assert set(state.attributes["by_source"]) == {"PV", "Auto"}

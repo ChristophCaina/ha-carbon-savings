@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
+from typing import Any
+
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -13,6 +16,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.helpers.event import async_track_time_interval
 
 from . import CarbonSavingsConfigEntry, CarbonSavingsData
 from .const import DOMAIN, SUBENTRY_GRID, SUBENTRY_HEAT_PUMP, SUBENTRY_VEHICLE
@@ -107,16 +111,36 @@ class TreesSensor(_HubSensor):
     # Unit comes from translations ("trees" / "Bäume")
     _attr_suggested_display_precision = 1
 
-    @property
-    def native_value(self) -> float | None:
-        factor = self._data.tree_factor
-        if factor <= 0:
-            return None
-        return round(self._data.co2_total / factor, 3)
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        if self._data.tree_growth_mode:
+            # Trees grow every day, even without new savings.
+            self.async_on_remove(
+                async_track_time_interval(
+                    self.hass, lambda _now: self._updated(), timedelta(hours=1)
+                )
+            )
 
     @property
-    def extra_state_attributes(self) -> dict[str, float]:
-        return {"kg_co2_per_tree": self._data.tree_factor}
+    def native_value(self) -> float | None:
+        if not self._data.tree_growth_mode:
+            factor = self._data.tree_factor
+            if factor <= 0:
+                return None
+            return round(self._data.co2_total / factor, 3)
+        return round(sum(self._data.trees_by_source().values()), 3)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        if not self._data.tree_growth_mode:
+            return {"mode": "fixed", "kg_co2_per_tree": self._data.tree_factor}
+        return {
+            "mode": "growth",
+            "by_source": {
+                title: round(trees, 1)
+                for title, trees in self._data.trees_by_source().items()
+            },
+        }
 
 
 class _SubentrySensor(_BaseSensor):

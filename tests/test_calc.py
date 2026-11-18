@@ -44,3 +44,14 @@ def test_heat_pump() -> None:
 def test_heat_pump_zero_efficiency() -> None:
     params = calc.HeatPumpParams(0.0, 10.0, 2.65)
     assert calc.heat_fuel_saved(100.0, params) == 0.0
+
+
+def test_tree_cumulative_uptake() -> None:
+    f = calc.tree_cumulative_uptake
+    assert f(0, 5.5, 23.5, 18) == 0.0
+    assert f(1, 5.5, 23.5, 18) == pytest.approx(5.5 + 0.5)
+    assert f(10, 5.5, 23.5, 18) == pytest.approx(55 + 50)
+    at_mature = 5.5 * 18 + 1.0 * 18**2 / 2
+    assert f(18, 5.5, 23.5, 18) == pytest.approx(at_mature)
+    assert f(20, 5.5, 23.5, 18) == pytest.approx(at_mature + 2 * 23.5)
+    assert f(3, 10, 20, 0) == pytest.approx(60)

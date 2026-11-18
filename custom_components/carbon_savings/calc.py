@@ -80,3 +80,22 @@ def heat_savings(delta_heat_kwh: float, params: HeatPumpParams) -> float:
 def heat_pump_electricity_cost(delta_el_kwh: float, grid_kg_per_kwh: float) -> float:
     """CO2 (kg) attributed to the heat pump's electricity (to be subtracted)."""
     return delta_el_kwh * grid_kg_per_kwh
+
+
+def tree_cumulative_uptake(
+    age_years: float, rate_young: float, rate_mature: float, years_to_mature: float
+) -> float:
+    """kg CO2 a single tree has absorbed after age_years.
+
+    The yearly uptake grows linearly from rate_young (at planting) to
+    rate_mature (after years_to_mature) and stays constant afterwards.
+    """
+    if age_years <= 0:
+        return 0.0
+    if years_to_mature <= 0:
+        return rate_mature * age_years
+    slope = (rate_mature - rate_young) / years_to_mature
+    if age_years <= years_to_mature:
+        return rate_young * age_years + slope * age_years**2 / 2
+    grown = rate_young * years_to_mature + slope * years_to_mature**2 / 2
+    return grown + rate_mature * (age_years - years_to_mature)

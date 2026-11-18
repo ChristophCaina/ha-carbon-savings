@@ -15,10 +15,18 @@ SUBENTRY_GRID: Final = "grid"
 # Hub (main entry) options
 CONF_GRID_INTENSITY_SENSOR: Final = "grid_intensity_sensor"
 CONF_GRID_FALLBACK: Final = "grid_fallback"  # g CO2 / kWh
-CONF_TREE_FACTOR: Final = "tree_factor"  # kg CO2 per tree
+CONF_TREE_FACTOR: Final = "tree_factor"  # kg CO2 per tree (fixed mode)
+CONF_TREE_MODE: Final = "tree_mode"
+CONF_TREE_RATE_YOUNG: Final = "tree_rate_young"  # kg CO2 / year in year 1
+CONF_TREE_RATE_MATURE: Final = "tree_rate_mature"  # kg CO2 / year when mature
+CONF_TREE_YEARS_TO_MATURE: Final = "tree_years_to_mature"
+
+TREE_MODE_FIXED: Final = "fixed"
+TREE_MODE_GROWTH: Final = "growth"
 
 # Common subentry options
 CONF_INITIAL_VALUE: Final = "initial_value"  # kg CO2 already saved before tracking
+CONF_START_DATE: Final = "start_date"  # in operation since (YYYY-MM-DD)
 
 # PV
 CONF_PRODUCTION_SENSOR: Final = "production_sensor"
@@ -61,6 +69,10 @@ FUEL_KWH_PER_LITRE: Final[dict[str, float]] = {
 
 DEFAULT_GRID_FALLBACK: Final = 380.0
 DEFAULT_TREE_FACTOR: Final = 60.0
+DEFAULT_TREE_RATE_YOUNG: Final = 5.5
+DEFAULT_TREE_RATE_MATURE: Final = 23.5
+DEFAULT_TREE_YEARS_TO_MATURE: Final = 18.0
+MIN_TREE_AGE_YEARS: Final = 1.0
 DEFAULT_CHARGING_LOSS: Final = 10.0
 DEFAULT_BOILER_EFFICIENCY: Final = 85.0
 

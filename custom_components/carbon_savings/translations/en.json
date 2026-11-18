@@ -7,12 +7,20 @@
         "data": {
           "grid_intensity_sensor": "Grid carbon intensity sensor",
           "grid_fallback": "Fallback grid intensity",
-          "tree_factor": "CO2 per tree"
+          "tree_mode": "Tree calculation",
+          "tree_factor": "CO2 per tree (fixed)",
+          "tree_rate_young": "Uptake in the first year",
+          "tree_rate_mature": "Uptake when fully grown",
+          "tree_years_to_mature": "Years until fully grown"
         },
         "data_description": {
           "grid_intensity_sensor": "Sensor in gCO2eq/kWh, e.g. from the Electricity Maps integration.",
           "grid_fallback": "Used when no sensor is set or it is unavailable.",
-          "tree_factor": "kg CO2 that equal one planted tree. Calibrate with your SolarEdge portal: CO2 saved ÷ trees."
+          "tree_mode": "Fixed: CO2 ÷ kg per tree. Growth curve: how many trees planted when each source went into operation would have absorbed its savings by today.",
+          "tree_factor": "kg CO2 that equal one planted tree in fixed mode (e.g. 60 kg = seedling grown for 10 years, US EPA). Also used for sources without a start date.",
+          "tree_rate_young": "kg CO2 per year of a freshly planted tree (growth curve).",
+          "tree_rate_mature": "kg CO2 per year of a mature tree (growth curve).",
+          "tree_years_to_mature": "Uptake grows linearly from first-year to mature value over this period."
         }
       }
     },
@@ -28,12 +36,20 @@
         "data": {
           "grid_intensity_sensor": "Grid carbon intensity sensor",
           "grid_fallback": "Fallback grid intensity",
-          "tree_factor": "CO2 per tree"
+          "tree_mode": "Tree calculation",
+          "tree_factor": "CO2 per tree (fixed)",
+          "tree_rate_young": "Uptake in the first year",
+          "tree_rate_mature": "Uptake when fully grown",
+          "tree_years_to_mature": "Years until fully grown"
         },
         "data_description": {
           "grid_intensity_sensor": "Sensor in gCO2eq/kWh, e.g. from the Electricity Maps integration.",
           "grid_fallback": "Used when no sensor is set or it is unavailable.",
-          "tree_factor": "kg CO2 that equal one planted tree. Calibrate with your SolarEdge portal: CO2 saved ÷ trees."
+          "tree_mode": "Fixed: CO2 ÷ kg per tree. Growth curve: how many trees planted when each source went into operation would have absorbed its savings by today.",
+          "tree_factor": "kg CO2 that equal one planted tree in fixed mode (e.g. 60 kg = seedling grown for 10 years, US EPA). Also used for sources without a start date.",
+          "tree_rate_young": "kg CO2 per year of a freshly planted tree (growth curve).",
+          "tree_rate_mature": "kg CO2 per year of a mature tree (growth curve).",
+          "tree_years_to_mature": "Uptake grows linearly from first-year to mature value over this period."
         }
       }
     }
@@ -52,11 +68,13 @@
           "data": {
             "name": "Name",
             "production_sensor": "Production energy sensor",
-            "initial_value": "CO2 already saved"
+            "initial_value": "CO2 already saved",
+            "start_date": "In operation since"
           },
           "data_description": {
             "production_sensor": "Lifetime (total increasing) PV production, e.g. the inverter's Modbus energy counter.",
-            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal).",
+            "start_date": "Date the source went into operation. Used for the tree growth curve."
           }
         },
         "reconfigure": {
@@ -65,11 +83,13 @@
           "data": {
             "name": "Name",
             "production_sensor": "Production energy sensor",
-            "initial_value": "CO2 already saved"
+            "initial_value": "CO2 already saved",
+            "start_date": "In operation since"
           },
           "data_description": {
             "production_sensor": "Lifetime (total increasing) PV production, e.g. the inverter's Modbus energy counter.",
-            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal).",
+            "start_date": "Date the source went into operation. Used for the tree growth curve."
           }
         }
       },
@@ -96,7 +116,8 @@
             "ice_consumption": "Combustion reference consumption",
             "fuel_type": "Reference fuel",
             "initial_fuel": "Fuel already saved",
-            "initial_value": "CO2 already saved"
+            "initial_value": "CO2 already saved",
+            "start_date": "In operation since"
           },
           "data_description": {
             "ev_consumption_sensor": "Long-term average consumption reported by the vehicle integration (kWh/100km, Wh/km or km/kWh). Values outside 5–60 kWh/100 km are ignored.",
@@ -104,7 +125,8 @@
             "charging_loss": "Added on top of the consumption.",
             "ice_consumption": "Consumption of a comparable combustion car.",
             "initial_fuel": "Litres saved before tracking started.",
-            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal).",
+            "start_date": "Date the source went into operation. Used for the tree growth curve."
           }
         },
         "reconfigure": {
@@ -119,7 +141,8 @@
             "ice_consumption": "Combustion reference consumption",
             "fuel_type": "Reference fuel",
             "initial_fuel": "Fuel already saved",
-            "initial_value": "CO2 already saved"
+            "initial_value": "CO2 already saved",
+            "start_date": "In operation since"
           },
           "data_description": {
             "ev_consumption_sensor": "Long-term average consumption reported by the vehicle integration (kWh/100km, Wh/km or km/kWh). Values outside 5–60 kWh/100 km are ignored.",
@@ -127,7 +150,8 @@
             "charging_loss": "Added on top of the consumption.",
             "ice_consumption": "Consumption of a comparable combustion car.",
             "initial_fuel": "Litres saved before tracking started.",
-            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal).",
+            "start_date": "Date the source went into operation. Used for the tree growth curve."
           }
         }
       },
@@ -151,12 +175,14 @@
             "electricity_sensor": "Electrical energy sensor",
             "boiler_efficiency": "Efficiency of the replaced oil boiler",
             "initial_oil": "Heating oil already saved",
-            "initial_value": "CO2 already saved"
+            "initial_value": "CO2 already saved",
+            "start_date": "In operation since"
           },
           "data_description": {
             "heat_sensor": "Thermal energy delivered by the heat pump (total increasing).",
             "electricity_sensor": "Electrical energy consumed by the heat pump (total increasing).",
-            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal).",
+            "start_date": "Date the source went into operation. Used for the tree growth curve."
           }
         },
         "reconfigure": {
@@ -168,12 +194,14 @@
             "electricity_sensor": "Electrical energy sensor",
             "boiler_efficiency": "Efficiency of the replaced oil boiler",
             "initial_oil": "Heating oil already saved",
-            "initial_value": "CO2 already saved"
+            "initial_value": "CO2 already saved",
+            "start_date": "In operation since"
           },
           "data_description": {
             "heat_sensor": "Thermal energy delivered by the heat pump (total increasing).",
             "electricity_sensor": "Electrical energy consumed by the heat pump (total increasing).",
-            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal)."
+            "initial_value": "kg CO2 saved before tracking started (e.g. value from the SolarEdge portal).",
+            "start_date": "Date the source went into operation. Used for the tree growth curve."
           }
         }
       },
@@ -213,6 +241,12 @@
     }
   },
   "selector": {
+    "tree_mode": {
+      "options": {
+        "fixed": "Fixed value per tree",
+        "growth": "Growth curve since start date"
+      }
+    },
     "fuel_type": {
       "options": {
         "petrol": "Petrol",
