@@ -25,6 +25,7 @@ from .const import (
     CONF_EV_CONSUMPTION,
     CONF_EV_CONSUMPTION_SENSOR,
     CONF_EXPORT_SENSOR,
+    CONF_FUEL_SCOPE,
     CONF_FUEL_TYPE,
     CONF_GRID_FALLBACK,
     CONF_GRID_INTENSITY_SENSOR,
@@ -52,6 +53,8 @@ from .const import (
     DOMAIN,
     FUEL_DIESEL,
     FUEL_PETROL,
+    SCOPE_DIRECT,
+    SCOPE_LIFECYCLE,
     SUBENTRY_GRID,
     SUBENTRY_HEAT_PUMP,
     SUBENTRY_PV,
@@ -88,6 +91,12 @@ HUB_SCHEMA = vol.Schema(
         ),
         vol.Required(CONF_GRID_FALLBACK, default=DEFAULT_GRID_FALLBACK): _number(
             "g/kWh", max_value=2000, step=1
+        ),
+        vol.Required(CONF_FUEL_SCOPE, default=SCOPE_DIRECT): selector.SelectSelector(
+            selector.SelectSelectorConfig(
+                options=[SCOPE_DIRECT, SCOPE_LIFECYCLE],
+                translation_key=CONF_FUEL_SCOPE,
+            )
         ),
         vol.Required(CONF_TREE_MODE, default=TREE_MODE_FIXED): selector.SelectSelector(
             selector.SelectSelectorConfig(

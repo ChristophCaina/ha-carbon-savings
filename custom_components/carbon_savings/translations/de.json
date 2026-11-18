@@ -7,6 +7,7 @@
         "data": {
           "grid_intensity_sensor": "Sensor CO2-Intensität Stromnetz",
           "grid_fallback": "Ersatzwert CO2-Intensität",
+          "fuel_scope": "Bilanzgrenze Brennstoffe",
           "tree_mode": "Berechnung der Bäume",
           "tree_factor": "CO2 pro Baum (fest)",
           "tree_rate_young": "Aufnahme im ersten Jahr",
@@ -16,6 +17,7 @@
         "data_description": {
           "grid_intensity_sensor": "Sensor in gCO2eq/kWh, z. B. aus der Electricity-Maps-Integration.",
           "grid_fallback": "Wird verwendet, wenn kein Sensor gesetzt oder er nicht verfügbar ist.",
+          "fuel_scope": "Nur Verbrennung: Benzin 2,37, Diesel 2,65, Heizöl 2,65 kg CO2/l. Mit Vorkette (Förderung, Raffinerie, Transport): Benzin 3,09, Diesel 3,29, Heizöl 3,10 kg CO2e/l. Passend zur Quelle der Netz-Intensität wählen: Electricity Maps rechnet mit Lebenszyklus, UBA-Werte nur mit Verbrennung.",
           "tree_mode": "Fest: CO2 ÷ kg pro Baum. Wachstumskurve: Wie viele Bäume, gepflanzt bei Inbetriebnahme der jeweiligen Quelle, hätten deren Einsparung bis heute gebunden.",
           "tree_factor": "kg CO2, die im festen Modus einem gepflanzten Baum entsprechen (z. B. 60 kg = Setzling nach 10 Jahren, US EPA). Wird auch für Quellen ohne Startdatum verwendet.",
           "tree_rate_young": "kg CO2 pro Jahr eines frisch gepflanzten Baums (Wachstumskurve).",
@@ -36,6 +38,7 @@
         "data": {
           "grid_intensity_sensor": "Sensor CO2-Intensität Stromnetz",
           "grid_fallback": "Ersatzwert CO2-Intensität",
+          "fuel_scope": "Bilanzgrenze Brennstoffe",
           "tree_mode": "Berechnung der Bäume",
           "tree_factor": "CO2 pro Baum (fest)",
           "tree_rate_young": "Aufnahme im ersten Jahr",
@@ -45,6 +48,7 @@
         "data_description": {
           "grid_intensity_sensor": "Sensor in gCO2eq/kWh, z. B. aus der Electricity-Maps-Integration.",
           "grid_fallback": "Wird verwendet, wenn kein Sensor gesetzt oder er nicht verfügbar ist.",
+          "fuel_scope": "Nur Verbrennung: Benzin 2,37, Diesel 2,65, Heizöl 2,65 kg CO2/l. Mit Vorkette (Förderung, Raffinerie, Transport): Benzin 3,09, Diesel 3,29, Heizöl 3,10 kg CO2e/l. Passend zur Quelle der Netz-Intensität wählen: Electricity Maps rechnet mit Lebenszyklus, UBA-Werte nur mit Verbrennung.",
           "tree_mode": "Fest: CO2 ÷ kg pro Baum. Wachstumskurve: Wie viele Bäume, gepflanzt bei Inbetriebnahme der jeweiligen Quelle, hätten deren Einsparung bis heute gebunden.",
           "tree_factor": "kg CO2, die im festen Modus einem gepflanzten Baum entsprechen (z. B. 60 kg = Setzling nach 10 Jahren, US EPA). Wird auch für Quellen ohne Startdatum verwendet.",
           "tree_rate_young": "kg CO2 pro Jahr eines frisch gepflanzten Baums (Wachstumskurve).",
@@ -241,6 +245,12 @@
     }
   },
   "selector": {
+    "fuel_scope": {
+      "options": {
+        "direct": "Nur Verbrennung",
+        "lifecycle": "Mit Vorkette"
+      }
+    },
     "tree_mode": {
       "options": {
         "fixed": "Fester Wert pro Baum",

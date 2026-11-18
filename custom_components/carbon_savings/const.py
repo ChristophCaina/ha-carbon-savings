@@ -15,6 +15,9 @@ SUBENTRY_GRID: Final = "grid"
 # Hub (main entry) options
 CONF_GRID_INTENSITY_SENSOR: Final = "grid_intensity_sensor"
 CONF_GRID_FALLBACK: Final = "grid_fallback"  # g CO2 / kWh
+CONF_FUEL_SCOPE: Final = "fuel_scope"
+SCOPE_DIRECT: Final = "direct"
+SCOPE_LIFECYCLE: Final = "lifecycle"
 CONF_TREE_FACTOR: Final = "tree_factor"  # kg CO2 per tree (fixed mode)
 CONF_TREE_MODE: Final = "tree_mode"
 CONF_TREE_RATE_YOUNG: Final = "tree_rate_young"  # kg CO2 / year in year 1
@@ -60,6 +63,15 @@ FUEL_CO2_PER_LITRE: Final[dict[str, float]] = {
     FUEL_PETROL: 2.37,
     FUEL_DIESEL: 2.65,
     FUEL_HEATING_OIL: 2.65,
+}
+
+# kg CO2e per litre including the upstream chain (extraction, refining, transport)
+# Petrol/diesel: combustion + well-to-tank 0.72 / 0.64 kg/l (ADAC Württemberg)
+# Heating oil: 310 g CO2e/kWh (GEG Anlage 9) x 10 kWh/l
+FUEL_CO2_PER_LITRE_LIFECYCLE: Final[dict[str, float]] = {
+    FUEL_PETROL: 3.09,
+    FUEL_DIESEL: 3.29,
+    FUEL_HEATING_OIL: 3.10,
 }
 
 # Lower heating value, kWh per litre

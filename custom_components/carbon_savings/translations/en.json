@@ -7,6 +7,7 @@
         "data": {
           "grid_intensity_sensor": "Grid carbon intensity sensor",
           "grid_fallback": "Fallback grid intensity",
+          "fuel_scope": "Fuel emissions scope",
           "tree_mode": "Tree calculation",
           "tree_factor": "CO2 per tree (fixed)",
           "tree_rate_young": "Uptake in the first year",
@@ -16,6 +17,7 @@
         "data_description": {
           "grid_intensity_sensor": "Sensor in gCO2eq/kWh, e.g. from the Electricity Maps integration.",
           "grid_fallback": "Used when no sensor is set or it is unavailable.",
+          "fuel_scope": "Combustion only: petrol 2.37, diesel 2.65, heating oil 2.65 kg CO2/l. Including upstream chain (extraction, refining, transport): petrol 3.09, diesel 3.29, heating oil 3.10 kg CO2e/l. Match it to your grid intensity source: Electricity Maps is life-cycle based, UBA figures are combustion only.",
           "tree_mode": "Fixed: CO2 ÷ kg per tree. Growth curve: how many trees planted when each source went into operation would have absorbed its savings by today.",
           "tree_factor": "kg CO2 that equal one planted tree in fixed mode (e.g. 60 kg = seedling grown for 10 years, US EPA). Also used for sources without a start date.",
           "tree_rate_young": "kg CO2 per year of a freshly planted tree (growth curve).",
@@ -36,6 +38,7 @@
         "data": {
           "grid_intensity_sensor": "Grid carbon intensity sensor",
           "grid_fallback": "Fallback grid intensity",
+          "fuel_scope": "Fuel emissions scope",
           "tree_mode": "Tree calculation",
           "tree_factor": "CO2 per tree (fixed)",
           "tree_rate_young": "Uptake in the first year",
@@ -45,6 +48,7 @@
         "data_description": {
           "grid_intensity_sensor": "Sensor in gCO2eq/kWh, e.g. from the Electricity Maps integration.",
           "grid_fallback": "Used when no sensor is set or it is unavailable.",
+          "fuel_scope": "Combustion only: petrol 2.37, diesel 2.65, heating oil 2.65 kg CO2/l. Including upstream chain (extraction, refining, transport): petrol 3.09, diesel 3.29, heating oil 3.10 kg CO2e/l. Match it to your grid intensity source: Electricity Maps is life-cycle based, UBA figures are combustion only.",
           "tree_mode": "Fixed: CO2 ÷ kg per tree. Growth curve: how many trees planted when each source went into operation would have absorbed its savings by today.",
           "tree_factor": "kg CO2 that equal one planted tree in fixed mode (e.g. 60 kg = seedling grown for 10 years, US EPA). Also used for sources without a start date.",
           "tree_rate_young": "kg CO2 per year of a freshly planted tree (growth curve).",
@@ -241,6 +245,12 @@
     }
   },
   "selector": {
+    "fuel_scope": {
+      "options": {
+        "direct": "Combustion only",
+        "lifecycle": "Including upstream chain"
+      }
+    },
     "tree_mode": {
       "options": {
         "fixed": "Fixed value per tree",

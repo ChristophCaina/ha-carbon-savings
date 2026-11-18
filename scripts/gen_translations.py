@@ -20,6 +20,10 @@ T = {
         "grid_fallback_d": "Used when no sensor is set or it is unavailable.",
         "tree": "CO2 per tree (fixed)",
         "tree_d": "kg CO2 that equal one planted tree in fixed mode (e.g. 60 kg = seedling grown for 10 years, US EPA). Also used for sources without a start date.",
+        "scope": "Fuel emissions scope",
+        "scope_d": "Combustion only: petrol 2.37, diesel 2.65, heating oil 2.65 kg CO2/l. Including upstream chain (extraction, refining, transport): petrol 3.09, diesel 3.29, heating oil 3.10 kg CO2e/l. Match it to your grid intensity source: Electricity Maps is life-cycle based, UBA figures are combustion only.",
+        "direct": "Combustion only",
+        "lifecycle": "Including upstream chain",
         "tree_mode": "Tree calculation",
         "tree_mode_d": "Fixed: CO2 ÷ kg per tree. Growth curve: how many trees planted when each source went into operation would have absorbed its savings by today.",
         "fixed": "Fixed value per tree",
@@ -93,6 +97,10 @@ T = {
         "grid_fallback_d": "Wird verwendet, wenn kein Sensor gesetzt oder er nicht verfügbar ist.",
         "tree": "CO2 pro Baum (fest)",
         "tree_d": "kg CO2, die im festen Modus einem gepflanzten Baum entsprechen (z. B. 60 kg = Setzling nach 10 Jahren, US EPA). Wird auch für Quellen ohne Startdatum verwendet.",
+        "scope": "Bilanzgrenze Brennstoffe",
+        "scope_d": "Nur Verbrennung: Benzin 2,37, Diesel 2,65, Heizöl 2,65 kg CO2/l. Mit Vorkette (Förderung, Raffinerie, Transport): Benzin 3,09, Diesel 3,29, Heizöl 3,10 kg CO2e/l. Passend zur Quelle der Netz-Intensität wählen: Electricity Maps rechnet mit Lebenszyklus, UBA-Werte nur mit Verbrennung.",
+        "direct": "Nur Verbrennung",
+        "lifecycle": "Mit Vorkette",
         "tree_mode": "Berechnung der Bäume",
         "tree_mode_d": "Fest: CO2 ÷ kg pro Baum. Wachstumskurve: Wie viele Bäume, gepflanzt bei Inbetriebnahme der jeweiligen Quelle, hätten deren Einsparung bis heute gebunden.",
         "fixed": "Fester Wert pro Baum",
@@ -167,6 +175,7 @@ def build(t: dict[str, str]) -> dict:
         "data": {
             "grid_intensity_sensor": t["grid_sensor"],
             "grid_fallback": t["grid_fallback"],
+            "fuel_scope": t["scope"],
             "tree_mode": t["tree_mode"],
             "tree_factor": t["tree"],
             "tree_rate_young": t["rate_young"],
@@ -176,6 +185,7 @@ def build(t: dict[str, str]) -> dict:
         "data_description": {
             "grid_intensity_sensor": t["grid_sensor_d"],
             "grid_fallback": t["grid_fallback_d"],
+            "fuel_scope": t["scope_d"],
             "tree_mode": t["tree_mode_d"],
             "tree_factor": t["tree_d"],
             "tree_rate_young": t["rate_young_d"],
@@ -279,6 +289,9 @@ def build(t: dict[str, str]) -> dict:
             },
         },
         "selector": {
+            "fuel_scope": {
+                "options": {"direct": t["direct"], "lifecycle": t["lifecycle"]}
+            },
             "tree_mode": {"options": {"fixed": t["fixed"], "growth": t["growth"]}},
             "fuel_type": {"options": {"petrol": t["petrol"], "diesel": t["diesel"]}},
         },

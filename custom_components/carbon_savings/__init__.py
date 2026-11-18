@@ -25,6 +25,7 @@ from .const import (
     CONF_EV_CONSUMPTION,
     CONF_EV_CONSUMPTION_SENSOR,
     CONF_EXPORT_SENSOR,
+    CONF_FUEL_SCOPE,
     CONF_FUEL_TYPE,
     CONF_GRID_FALLBACK,
     CONF_GRID_INTENSITY_SENSOR,
@@ -50,10 +51,12 @@ from .const import (
     DEFAULT_TREE_RATE_YOUNG,
     DEFAULT_TREE_YEARS_TO_MATURE,
     FUEL_CO2_PER_LITRE,
+    FUEL_CO2_PER_LITRE_LIFECYCLE,
     FUEL_HEATING_OIL,
     FUEL_KWH_PER_LITRE,
     FUEL_PETROL,
     MIN_TREE_AGE_YEARS,
+    SCOPE_LIFECYCLE,
     SUBENTRY_GRID,
     SUBENTRY_HEAT_PUMP,
     SUBENTRY_PV,
@@ -79,6 +82,12 @@ class CarbonSavingsData:
     def tree_factor(self) -> float:
         """kg CO2 per tree equivalent (fixed mode / fallback)."""
         return float(self.entry.options.get(CONF_TREE_FACTOR, DEFAULT_TREE_FACTOR))
+
+    def fuel_co2(self, fuel: str) -> float:
+        """kg CO2 per litre of a fuel, depending on the configured scope."""
+        if self.entry.options.get(CONF_FUEL_SCOPE) == SCOPE_LIFECYCLE:
+            return FUEL_CO2_PER_LITRE_LIFECYCLE[fuel]
+        return FUEL_CO2_PER_LITRE[fuel]
 
     @property
     def tree_growth_mode(self) -> bool:
@@ -216,7 +225,7 @@ def _build_tracker(
         fixed_consumption = float(conf[CONF_EV_CONSUMPTION])
         charging_loss = float(conf.get(CONF_CHARGING_LOSS, DEFAULT_CHARGING_LOSS))
         ice = float(conf[CONF_ICE_CONSUMPTION])
-        fuel_co2 = FUEL_CO2_PER_LITRE[conf.get(CONF_FUEL_TYPE, FUEL_PETROL)]
+        fuel_co2 = data.fuel_co2(conf.get(CONF_FUEL_TYPE, FUEL_PETROL))
 
         def _vehicle(delta: float) -> tuple[float, float]:
             params = calc.VehicleParams(
@@ -250,7 +259,7 @@ def _build_tracker(
                 conf.get(CONF_BOILER_EFFICIENCY, DEFAULT_BOILER_EFFICIENCY)
             ),
             fuel_kwh_per_l=FUEL_KWH_PER_LITRE[FUEL_HEATING_OIL],
-            fuel_kg_co2_per_l=FUEL_CO2_PER_LITRE[FUEL_HEATING_OIL],
+            fuel_kg_co2_per_l=data.fuel_co2(FUEL_HEATING_OIL),
         )
 
         def _heat(delta: float) -> tuple[float, float]:

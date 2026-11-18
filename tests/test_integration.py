@@ -20,6 +20,7 @@ from custom_components.carbon_savings.const import (
     CONF_EV_CONSUMPTION,
     CONF_EV_CONSUMPTION_SENSOR,
     CONF_EXPORT_SENSOR,
+    CONF_FUEL_SCOPE,
     CONF_FUEL_TYPE,
     CONF_GRID_FALLBACK,
     CONF_GRID_INTENSITY_SENSOR,
@@ -403,3 +404,28 @@ async def test_trees_growth_mode(hass: HomeAssistant) -> None:
     assert float(state.state) == pytest.approx(expected, rel=1e-3)
     assert state.attributes["mode"] == "growth"
     assert set(state.attributes["by_source"]) == {"PV", "Auto"}
+
+
+@pytest.mark.parametrize(("scope", "oil"), [("direct", 2.65), ("lifecycle", 3.10)])
+async def test_heat_pump_fuel_scope(
+    hass: HomeAssistant, scope: str, oil: float
+) -> None:
+    _kwh(hass, HEAT, 0)
+    _kwh(hass, EL, 0)
+    sub = ConfigSubentryData(
+        data={
+            CONF_HEAT_SENSOR: HEAT,
+            CONF_ELECTRICITY_SENSOR: EL,
+            CONF_BOILER_EFFICIENCY: 100.0,
+            CONF_INITIAL_VALUE: 0.0,
+            CONF_INITIAL_OIL: 0.0,
+        },
+        subentry_id="hp1",
+        subentry_type=SUBENTRY_HEAT_PUMP,
+        title="WP",
+        unique_id=None,
+    )
+    await _setup(hass, _entry([sub], **{CONF_FUEL_SCOPE: scope}))
+    _kwh(hass, HEAT, 100)
+    await hass.async_block_till_done()
+    assert _value(hass, "hp1_co2_saved") == pytest.approx(10 * oil)

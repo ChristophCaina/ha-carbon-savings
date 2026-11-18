@@ -29,6 +29,7 @@ HACS → ⋮ → *Custom repositories* → `https://github.com/ChristophCaina/ha
 1. *Settings → Devices & services → Add integration → Carbon Savings*
    - **Grid carbon intensity sensor** (optional), e.g. from the [Electricity Maps](https://www.home-assistant.io/integrations/co2signal/) integration (g CO₂eq/kWh)
    - **Fallback intensity** used when the sensor is missing/unavailable
+   - **Fuel emissions scope** – *combustion only* (petrol 2.37 / diesel 2.65 / heating oil 2.65 kg CO₂ per litre) or *including upstream chain* (3.09 / 3.29 / 3.10 kg CO₂e per litre; well-to-tank values from ADAC Württemberg, heating oil 310 g CO₂e/kWh from GEG Anlage 9). Use the scope that matches your grid factor: Electricity Maps is life-cycle based, UBA figures are combustion only. Initial values are not recalculated.
    - **Tree calculation**
      - *Fixed*: CO₂ ÷ kg per tree (default 60 kg = seedling grown for 10 years, US EPA; SolarEdge uses ≈ 33.5 kg)
      - *Growth curve*: "How many trees, planted when each source went into operation, would have absorbed its savings by today?" Yearly uptake rises linearly from 5.5 kg (first year) to 23.5 kg (fully grown after 18 years); all three values are configurable. Sources need an *In operation since* date, otherwise the fixed value is used. The tree count is refreshed hourly; the attribute `by_source` shows the split.
