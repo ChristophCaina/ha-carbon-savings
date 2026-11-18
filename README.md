@@ -54,6 +54,17 @@ Each source has an **initial value** for savings achieved before tracking starte
 
 The grid connection is a separate **footprint view** and is *not* added to "CO₂ saved total": PV already gets credited for every produced kWh, so adding the export credit (or subtracting imports) would count the same kWh twice. A positive balance means the household is net carbon-negative on electricity.
 
+## Comparison with the SolarEdge monitoring portal
+
+SolarEdge's *Technical Note – Monitoring Platform Environmental Benefits Calculation* (v2.4, April 2022) derives both values directly from produced kWh:
+
+- CO₂ (kg) = kWh × country factor – Germany falls under "All Others" with **392 g/kWh**
+- Trees = kWh × **0.0117 trees/kWh** (same factor for almost every country, source: US EPA)
+
+For Germany this means 392 g ÷ 0.0117 ≈ **33.5 kg CO₂ per tree**. The trees factor, however, matches the US grid: 689.56 g/kWh ÷ 0.0117 ≈ **59 kg per tree**, i.e. the EPA value for an urban tree seedling grown for 10 years (≈ 60 kg). SolarEdge applies this US-derived trees/kWh factor to countries with lower grid intensity, which makes each tree "worth" less CO₂ there.
+
+Carbon Savings therefore relates trees to CO₂ (default 60 kg per tree, as in the EPA methodology). To reproduce the portal exactly, set *CO₂ per tree* to 33.5 kg and use 392 g/kWh for the PV initial value. Your portal's *CO₂ saved* is a good initial value for the PV source.
+
 ## Notes
 
 - Counters are tracked by deltas. A decreasing value is treated as a counter reset; `unavailable`/`unknown` is ignored. Deltas that happen while Home Assistant is stopped are added on the next start (with the then-current intensity).
